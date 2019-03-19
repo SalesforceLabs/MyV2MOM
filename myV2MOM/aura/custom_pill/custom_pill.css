@@ -1,0 +1,10 @@
+.THIS.slds-pill .slds-pill__icon_container[class*="slds-icon-utility"] .slds-icon {
+    padding: t(spacingXxSmall);
+    position: relative;
+    top: -1px;
+    margin-right: -t(spacingXxSmall);
+}
+
+.THIS .sp-remove .slds-button__icon {
+    pointer-events: none;
+}

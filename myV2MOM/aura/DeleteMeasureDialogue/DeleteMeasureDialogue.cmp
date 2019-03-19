@@ -1,0 +1,8 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="mName" type="String" />
+    <aura:attribute name="objType" type="String" />
+    <div class="slds-align_absolute-center">
+        <span>Are you sure you want to delete the {!v.objType} <label style="padding-left:5px" ><b> {!v.mName}</b> ?</label></span>
+    </div>
+    
+</aura:component>

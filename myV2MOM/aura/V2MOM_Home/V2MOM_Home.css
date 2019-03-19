@@ -1,0 +1,206 @@
+/*****************************/
+
+.THIS .allMnMsCard .slds-card__header{
+    background: rgb(243, 242, 242) !important;
+    padding: .75rem 1rem !important;
+}
+.THIS .allMnMsCard{
+    
+    border: 1px solid rgb(221, 219, 218);
+}
+
+.THIS .mh281{
+    min-height: 281px;
+}
+/*****************************/
+.THIS .addMeasure{
+    width: 100%;
+}
+
+.THIS .slds-form-element .vvtextarea label{
+    display: none !important;
+}
+
+.THIS .slds-card-method {
+    height:40%;
+    background-color: white;
+    width: 98%;
+    display: inline-block;
+    margin: 1%;
+    border:1px solid #DDDBD9;
+}
+
+.THIS .slds-card-measure {
+    vertical-align:top;
+    width: 48%;
+    display: inline-block;
+    margin: 1%;
+    border:1px solid #DDDBD9;
+    min-height: 338px;
+}
+
+.THIS .slds_card_prog{
+        min-height: 250px;
+}
+
+.THIS .vertAlign{
+    vertical-align: middle;
+}
+.THIS .slds-media__body {
+    margin-bottom: 0;
+    
+}
+
+.THIS span.slds-text-heading_small {
+ 
+    color:#222;
+}
+.THIS span.duedate {
+    font-size: 12px;
+    Color:#666;
+}
+.THIS .slds-badge {
+    background-color: #0070D2;
+    color: white;
+}
+
+.THIS #viewallquarters{
+     position:relative;
+    bottom:60px;
+}
+.THIS .slds-no-flex {
+   
+    text-align: center;
+    }
+
+
+.THIS svg.slds-icon.slds-icon-text-default.slds-icon {
+    width: 20px;
+}
+
+.THIS span.slds-icon_container.slds-icon-utility-threedots {
+    margin-right: 12px;
+}
+
+.THIS .gauge {
+    text-align: center;
+    margin-top:0px;
+        
+}
+
+.THIS .min204 {
+    min-height: 200px;
+}
+
+.THIS .circleimg{
+    position:relative;
+    bottom:60px;
+}
+.THIS span.Value {
+    color: #0070d2;
+}
+
+.THIS .referVision{
+    display: inline-block;
+    float: right;
+}
+.THIS .data{
+    position: relative;
+    top: 20px;
+}
+
+.THIS .imgQuarter {
+    max-width: 40px;
+}
+
+.THIS .card__body_inner {
+    text-align: center;
+}
+
+
+.THIS .imgSmiley {
+    max-width:20px;
+    margin-bottom: 5px;
+}
+
+.THIS span.slds-icon_container.slds-icon-utility-edit {
+    padding-left: 10px;
+}
+.THIS.wrapper{
+    margin:auto;
+}
+.THIS .slds-page-header{
+    color:#FDFEFD;
+    border-radius: .25rem .25rem 0 0;
+   /* background-color:#5978A2 !important; */
+}
+
+.THIS .cardBackground{
+   background-color:#F6F7F6;
+}
+.THIS .addMeasure{
+    width: 100%;
+}
+.THIS .badge-status {
+    
+    background-color: #0070d2;
+    color: white;
+  
+    
+    }
+
+.THIS .WidthDiv{
+    width:50% !important;
+}
+.THIS .quarter_background{
+    background-image : url(/resource/quater_placeholder);
+}
+.THIS .badge-status-published{
+    background-color:#1fcaa0 !important
+}
+.THIS .slds-measure{
+     min-height: 338px !important;
+}
+
+.THIS .width50{
+    width: 50%;
+}
+
+.THIS .wordWrapBreak{
+    word-wrap: break-word;
+}
+
+.THIS .padding0 .slds-tabs--default__content{
+    padding: 0px;
+}
+.THIS .pageHeaderBg{
+    background: #f3f2f2;
+}
+
+.THIS .pageHeaderBorCol{
+    border-color: none;
+}
+
+.THIS .button_transparent button{
+    background: transparent !important;
+}
+.THIS .referVisionMobile{
+    color: rgb(0, 95, 178);
+}
+.THIS .slds-is-open>.slds-accordion__summary{
+    margin-bottom: .5rem;
+}
+.THIS .slds-accordion__summary-action-icon{
+    line-height: 0 !important;
+    transition: 0.3s;
+}
+.THIS .slds-accordion__summary-action-icon .slds-icon{
+    height: 0.875rem;
+    width: 0.875rem;
+}
+.THIS .vAlignTestTop button{
+    vertical-align: text-top;
+}
+.THIS .slds-accordion__summary-action-icon svg.slds-icon.slds-icon-text-default.slds-icon {
+    width: 14px;
+}

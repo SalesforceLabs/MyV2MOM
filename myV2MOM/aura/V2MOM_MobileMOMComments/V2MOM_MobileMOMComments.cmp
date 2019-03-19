@@ -1,0 +1,73 @@
+<aura:component >
+	
+    <aura:attribute name="measure" type="Object"/>
+    <aura:attribute name="showComments" type="boolean" default="false"/>
+    
+    <aura:attribute name="isMeasureTeam" type="Boolean" default="false"/>
+    
+    <aura:handler name="change" value="{!v.measure}" action="{!c.refreshComments}"/>
+    <aura:handler name="change" value="{!v.showComments}" action="{!c.showHideComments}"/>
+
+    <div class="{!empty(v.measure) ? 'slds-hide' : 'slds-show'}">
+    <lightning:card >
+        <aura:set attribute="title">
+            <div class="slds-m-bottom_small"><span class="slds-badge">{!!v.isMeasureTeam ? v.measure.Priority__c : v.measure.Measure__r.Priority__c}</span></div>
+            <span class="slds-text-heading_small">{!!v.isMeasureTeam ? v.measure.Name : v.measure.Measure__r.Name}</span>
+            <p class="slds-text-color_weak ft12px">Due: <ui:outputDate value="{!!v.isMeasureTeam ? v.measure.Completion_By_Date__c : v.measure.Measure__r.Completion_By_Date__c}"/></p>
+        </aura:set>
+        <aura:set attribute="actions">
+            <!--<lightning:buttonMenu name="{!v.measure.Name}" variant="container" aura:id="menu" value="{!v.measure.Id}" menuAlignment="right" iconName="utility:threedots" alternativeText="Show menu" onselect="{!c.measureHandleSelect}">
+                <lightning:menuItem label="Edit" value="Edit"/>
+                <lightning:menuItem label="View Obstacles &amp; Comments" value="View Obstacles and Comments"/>
+                <aura:if isTrue="{!greaterthan(v.numberOfReportees,0)}"><lightning:menuItem label="Assign this measure" value="Assign this measure"/></aura:if>
+                <aura:if isTrue="{!notequals(v.currentUserId,v.myV2mom.User__c)}"><lightning:menuItem label="Add to my V2MOM" value="Add to my V2MOM"/></aura:if>
+            </lightning:buttonMenu>-->
+        </aura:set>
+        <aura:set attribute="footer">
+            <div class="slds-clearfix">
+                <div class="slds-float_left">
+                    <!--<lightning:icon iconName="utility:comments" size="x-small"/> <span class="ft12px">n Comments</span>-->
+                </div>
+                <div class="slds-float_right">
+                    <aura:if isTrue="{!and(v.measure.Split_By_Quarter__c, not(v.isMeasureTeam))}">
+                        <a href="" class="ft12px">View All Quarters</a>                                                	
+                    </aura:if>
+                </div>
+            </div>
+        </aura:set>
+        <div class="slds-m-horizontal_medium">
+            <aura:if isTrue="{!or(equals(v.measure.Track_Progress_By__c,'Numbers Completed'), equals(v.measure.Measure__r.Track_Progress_By__c, 'Numbers Completed'))}">
+                <div class="slds-clearfix">
+                    <div class="slds-float_right">
+                        <aura:if isTrue="{!v.isMeasureTeam}">
+                            <p class="slds-text-color_weak ft12px">{!v.measure.Current_Value__c}/{!v.measure.Target_Value__c}</p>
+                            <aura:set attribute="else">
+                                <p class="slds-text-color_weak ft12px">{!v.measure.Total_Current_Value__c}/{!v.measure.Target_Value__c}</p>
+                            </aura:set>
+                        </aura:if>
+                    </div>
+                </div>
+                <aura:if isTrue="{!v.isMeasureTeam}">
+                    <lightning:progressBar value="{!(v.measure.Current_Value__c / v.measure.Target_Value__c) * 100}"/>
+                    <aura:set attribute="else">
+                        <lightning:progressBar value="{!(v.measure.Total_Current_Value__c / v.measure.Target_Value__c) * 100}"/>
+                    </aura:set>
+                </aura:if>
+                <aura:set attribute="else">
+                    <aura:if isTrue="{!or(equals(v.measure.Track_Progress_By__c,'Completion Status'), equals(v.measure.Measure__r.Track_Progress_By__c,'Completion Status'))}">
+                        {!v.measure.Status__c}
+                        <lightning:progressIndicator currentStep="{!v.measure.Status__c}" type="base" hasError="false" variant="base">
+                            <lightning:progressStep label="Not Started" value="Not Started"/>
+                            <lightning:progressStep label="Behind Schedule" value="Behind Schedule"/>
+                            <lightning:progressStep label="On Hold" value="On Hold"/>
+                            <lightning:progressStep label="On Track" value="On Track"/>
+                            <lightning:progressStep label="Completed " value="Completed"/>
+                        </lightning:progressIndicator>
+                    </aura:if>
+                </aura:set>
+            </aura:if>
+        </div>
+    </lightning:card>
+        <c:MeasureChatterCmp aura:id="commentComponent" popoverHidden="{!v.showComments}"/>
+    </div>
+</aura:component>

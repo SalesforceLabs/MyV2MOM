@@ -1,0 +1,445 @@
+<aura:component controller="V2MOM_Controller" access="global">
+    
+    <aura:attribute name="currentUserId" type="String" />
+    <aura:attribute name="v2momUserId" type="String" />
+    <aura:attribute name="v2momId" type="String" default=""/>
+    <aura:attribute name="managerV2MOMId" type="String"/>
+    <aura:attribute name="currentUserV2MOMId" type="String"/>
+    <aura:attribute name="v2momOptions" type="List" />
+    <aura:attribute name="v2momOptionsArr" type="List" />
+    <aura:attribute name="selV2MOM" type="String" />
+    <aura:attribute name="uName" type="string" />
+    <aura:attribute name="disableSaveVisionAndValueButton" type="boolean" default="true"/>
+    <aura:attribute name="disablePublishButton" type="boolean" default="false"/>
+    <aura:attribute name="vision" type="String" />
+    <aura:attribute name="value" type="String" />
+    <aura:attribute name="newMethodName" type="String"/>
+    <aura:attribute name="allMethods" type="Method__c[]"/>
+    <aura:attribute name="selectedMethodId" type="String"/>
+    <aura:attribute name="myV2mom" type="V2MOM__c" /> 
+    <!-- <aura:attribute name="measWrapper" type="MeasuresWrapper[]" /> -->
+    <aura:attribute name="isManager" type="boolean" />
+    <aura:attribute name="canBePublished" type="boolean" default="false"/>
+    <aura:attribute name="editMethod" type="Method__c"/>
+    <aura:attribute name="MethodandMeasureMap" type="Object"/>
+    <aura:attribute name="newMnMWrapper" type="Object"/>
+    <aura:attribute name="numberOfReportees" type="Integer"/>
+    <aura:attribute name="editVV" type="boolean" default="false"/>
+    <aura:attribute name="selectedMnMTab" type="String" default="My"/>
+    <aura:attribute name="lastupdatedDate" type="String" />
+    <aura:attribute name="MgrVision" type="String" />
+    <aura:attribute name="MgrValues" type="String" />
+    <aura:attribute name="themeBackground" type="string"/>
+    
+    
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler name="updateView" event="c:Refresh_V2MOM_Home" action="{!c.refresh}"/>
+    <aura:handler event="c:V2MOM_ChildRecordEvent" action="{!c.handleAssignedMeasureUpdate}"/>
+    
+    <c:V2MOM_AssignMeasure aura:id="assignMeasureComponent" numberOfReportees="{!v.numberOfReportees}"/>
+    <c:V2MOM_AdoptMeasure currentUserV2MOMId="{!v.currentUserV2MOMId}" aura:id="adoptMeasureComponent"/>
+    <c:ObstaclesAndComments aura:id="showObsAndComments" />
+    <c:MeasureChatterCmp aura:id="showMeasureChatId" />
+    <c:V2MOM_Measure aura:id="MeasureCompId" />
+    <c:V2MOM_Method aura:id="MethodCompId" />
+    <c:V2MOM_ReorderMethods aura:id="MethodReorderComp" MethodsList="{!v.newMnMWrapper.myMnM}"/>
+    <c:V2MOM_Measure aura:id="measureCompId" methodId="{!v.selectedMethodId}"></c:V2MOM_Measure>
+    <c:V2MOM_AssignedMeasure aura:id="editAssignedMeasure"/>
+    <section aura:id="srModal" role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-describedby="modal-content-id-1" class="slds-modal">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <lightning:buttonIcon class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" iconName="utility:close" variant="bare" alternativeText="Settings" onclick="{!c.closeModal}"/>
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Manager's Vision</h2>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium">
+                <div class="slds-form-element">
+                    <!--label class="slds-form-element__label" for="textarea-id-01">Manager's Vision</label-->
+                    <textarea class="slds-textarea" readonly="true" aura:id="MgrVision">{!v.MgrVision}</textarea>
+                </div>
+            </div>
+            <footer class="slds-modal__footer">
+                <!--lightning:button variant="neutral" label="Cancel" onclick="{!c.closeModal}"/-->
+                <lightning:button variant="brand" label="Copy to clipboard" onclick="{!c.copytoclip}"/>
+            </footer>
+        </div>
+    </section>
+    <section aura:id="ValuesModal" role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-describedby="modal-content-id-1" class="slds-modal">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <lightning:buttonIcon class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" iconName="utility:close" variant="bare" alternativeText="Settings" onclick="{!c.closeValuesModal}"/>
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Manager's Values</h2>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium">
+                <div class="slds-form-element">
+                    <!--label class="slds-form-element__label" for="textarea-id-01">Manager's Vision</label-->
+                    <textarea class="slds-textarea" readonly="true" aura:id="MgrValues">{!v.MgrValues}</textarea>
+                </div>
+                <!--p aura:id="MgrVision">{!v.MgrVision}</p-->
+            </div>
+            <footer class="slds-modal__footer">
+                <!--lightning:button variant="neutral" label="Cancel" onclick="{!c.closeValuesModal}"/-->
+                <lightning:button variant="brand" label="Copy to clipboard" onclick="{!c.copyValuestoclip}"/>
+            </footer>
+        </div>
+    </section>
+    
+    <div aura:id="modalBkdrp" class="slds-backdrop"></div>
+    <div class="branding-setup wrapper slds-container_medium">
+        <div class="branding-primary-background slds-page-header pageHeaderBorCol" id="heading">
+            <div class="slds-media">
+                <div class="slds-media__body">
+                    <div class="slds-clearfix">
+                        <div class="slds-float_left">
+                            <div>
+                                <aura:if isTrue="{!empty(v.v2momId)}">  
+                                    <span class="slds-page-header__title slds-truncate slds-align-middle" style="display: inline-block;" title="Start your V2MOM">Start your V2MOM</span>
+                                    <aura:set attribute="else">
+                                        <span class="slds-page-header__title slds-truncate slds-align-middle" style="display: inline-block;" title="V2MOM">FY{!v.myV2mom.FY_Year__c} V2MOM</span>
+                                        <aura:if isTrue="{!  equals(v.myV2mom.Status__c,'Published')}">
+                                            <span class="slds-badge badge-status badge-status-published vertAlign slds-m-left_xx-small"  >{!v.myV2mom.Status__c}</span> 
+                                            <aura:set attribute="else">
+                                                <span class="slds-badge badge-status vertAlign slds-m-left_xx-small" >{!v.myV2mom.Status__c}</span> 
+                                            </aura:set>
+                                        </aura:if>
+                                    </aura:set>
+                                </aura:if>
+                            </div>
+                        </div>
+                        <div class="slds-float_right">
+                            <lightning:buttonGroup >
+                                <aura:if isTrue="{! not(empty(v.v2momId))}">
+                                    <aura:if isTrue="{!v.currentUserId == v.v2momUserId}">
+                                        <aura:if isTrue="{!!empty(v.managerV2MOMId)}">
+                                            <lightning:button label="Manager's V2MOM" variant="Neutral" value="{!v.managerV2MOMId}" onclick="{!c.NavigateToV2MOM}"/>
+                                        </aura:if>
+                                        <aura:if isTrue="{! not(empty(v.newMnMWrapper.myMnM))}">
+                                            <lightning:button class="slds-m-left_x-small publishButton" variant="neutral" label="Publish" onclick="{!c.publishMyV2MOM }" disabled="{! v.disablePublishButton}"/>
+                                        </aura:if>
+                                        <aura:set attribute="else">
+                                            <lightning:button label="My V2MOM" variant="Neutral" value="{!v.currentUserV2MOMId}" onclick="{!c.NavigateToV2MOM}"/>
+                                        </aura:set>
+                                    </aura:if>
+                                </aura:if>
+                            </lightning:buttonGroup>
+                        </div>
+                    </div>
+                    <div class="slds-text-heading_medium slds-truncate slds-m-top_xx-small"><b>{!v.myV2mom.CreatedBy.Name}</b></div>
+                    
+                    <lightning:layout >
+                        <lightning:layoutItem size="10">
+                            
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="2">
+                            
+                            <div class="dropdowntabs" >                                
+                            </div>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </div>
+            </div>
+        </div>
+        
+        <lightning:tabset class="dropdowntabs padding0">
+            <lightning:tab label="My V2MOM">
+                <aura:if isTrue="{!and(v.v2momOptionsArr.length > 0 , !empty(v.v2momId))}">
+                    <lightning:layout class="pageHeaderBg">
+                        <lightning:layoutItem flexibility="auto" padding="around-small">
+                            <div class="custom-box">
+                                <lightning:select name="mySelect" label="View V2MOM" aura:id="v2momSelect" value="{!v.selV2MOM}" class="width50" onchange="{!c.selV2MOMChange}">
+                                    <aura:iteration items="{!v.v2momOptionsArr}" var="item">
+                                        <option text="{!item.label}" value="{!item.value}" selected="{!item.selected}"/>
+                                    </aura:iteration>
+                                </lightning:select>
+                            </div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem flexibility="auto" padding="around-small">
+                            <div class="custom-box">
+                                <dl>
+                                    <dt class="slds-form-element__label">Last Updated Date</dt>
+                                    <dd><ui:outputDate value="{!v.lastupdatedDate}"/></dd>
+                                </dl>
+                            </div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem flexibility="auto" padding="around-small">
+                            <div class="custom-box">
+                                <dl>
+                                    <dt class="slds-form-element__label">Last Published Date</dt>
+                                    <dd><ui:outputDate value="{!v.myV2mom.Published_Date__c}"/></dd>
+                                </dl>
+                            </div>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </aura:if>
+                
+                <div class="vvDiv slds-m-around_top" aura:id="visionSectionId" >
+                    <ul class="slds-accordion">
+                        <li class="slds-accordion__list-item">
+                            <section class="slds-accordion__section slds-is-open" aura:id="visionAccordion">
+                                <div class="slds-accordion__summary">
+                                    <h3 class="slds-text-heading_small slds-accordion__summary-heading">
+                                        <button aria-controls="accordion-details-01" data-controls="visionAccordion" aria-expanded="true" class="slds-button slds-button_reset slds-accordion__summary-action" onclick="{!c.handleAccordion}">
+                                            <lightning:icon class="slds-accordion__summary-action-icon slds-button__icon slds-button__icon_left" iconName="utility:switch" size="x-small"/>
+                                            <span class="slds-truncate" title="Accordion summary">Vision <lightning:helptext class="vAlignTestTop" content="What do you want to achieve this year?"/></span>
+                                        </button>
+                                        <aura:if isTrue="{! v.currentUserId == v.v2momUserId}">
+                                            <aura:if isTrue="{!v.editVV}">
+                                                <a class="referVisionMobile slds-text-align_right slds-float_right slds-text-title slds-text-link" onclick="{!c.referMgrVision}">Copy manager's vision</a>
+                                                <!--aura:set attribute="else">
+                                                 <lightning:buttonIcon iconName="utility:edit" variant="bare" alternativeText="Edit Vision" onclick="{!c.editVision}"/>
+                                                </aura:set-->
+                                            </aura:if>
+                                            <aura:set attribute="else">
+                                                <aura:if isTrue="{!empty(v.v2momUserId)}" >
+                                                    <a class="referVisionMobile slds-text-align_right slds-float_right slds-text-title slds-text-link" onclick="{!c.referMgrVision}">Copy manager's vision</a>
+                                                </aura:if>
+                                            </aura:set>
+                                        </aura:if> 
+                                    </h3>
+                                </div>
+                                <div aria-hidden="false" class="slds-accordion__content" id="accordion-details-01">
+                                    <div class="slds-form-element">
+                                        <div class="slds-form-element__control">
+                                            <aura:if isTrue="{! v.currentUserId != v.v2momUserId }">
+                                                <aura:if isTrue="{!empty(v.v2momUserId)}" >
+                                                    <lightning:textarea name="inputArea1" class="vvtextarea" label="" value="{!v.vision}" required="true" placeholder="Add a vision"/>
+                                                    <aura:set attribute="else">
+                                                        <div class="slds-text-body_regular wordWrapBreak"><lightning:formattedText value="{!v.vision}" /></div>
+                                                    </aura:set>
+                                                </aura:if>
+                                                <aura:set attribute="else">
+                                                    <aura:if isTrue="{!v.editVV}">
+                                                        <lightning:textarea name="inputArea1" class="vvtextarea" label="" value="{!v.vision}" required="true" placeholder="Add a vision"/>
+                                                        <aura:set attribute="else">
+                                                            <div class="slds-text-body_regular wordWrapBreak"><lightning:formattedText value="{!v.vision}" /></div>
+                                                        </aura:set>
+                                                    </aura:if>
+                                                </aura:set>
+                                            </aura:if>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </section>
+                        </li>
+                        <li class="slds-accordion__list-item">
+                            <section class="slds-accordion__section slds-is-open" aura:id="valuesAccordion">
+                                <div class="slds-accordion__summary">
+                                    <h3 class="slds-text-heading_small slds-accordion__summary-heading">
+                                        <button aria-controls="accordion-details-02" data-controls="valuesAccordion" aria-expanded="true" class="slds-button slds-button_reset slds-accordion__summary-action" onclick="{!c.handleAccordion}">
+                                            <lightning:icon class="slds-accordion__summary-action-icon slds-button__icon slds-button__icon_left" iconName="utility:switch" size="x-small"/>
+                                            <span class="slds-truncate" title="Accordion summary">Values <lightning:helptext class="vAlignTestTop" content="What are the principles and beliefs that guide your Vision?"/></span>
+                                        </button>
+                                        <aura:if isTrue="{! v.currentUserId == v.v2momUserId}">
+                                            <aura:if isTrue="{!v.editVV}">
+                                                <a class="referVisionMobile slds-text-align_right slds-float_right slds-text-title slds-text-link" onclick="{!c.referMgrValue}">Copy manager's values</a>
+                                                <!--aura:set attribute="else">
+                                                 <lightning:buttonIcon iconName="utility:edit" variant="bare" alternativeText="Edit Values" onclick="{!c.editValues}"/>
+                                                </aura:set-->
+                                            </aura:if>
+                                            <aura:set attribute="else">
+                                                <aura:if isTrue="{!empty(v.v2momUserId)}" >
+                                                    <a class="referVisionMobile slds-text-align_right slds-float_right slds-text-title slds-text-link" onclick="{!c.referMgrValue}">Copy manager's values</a>
+                                                </aura:if>
+                                            </aura:set>
+                                        </aura:if>
+                                    </h3>
+                                </div>
+                                <div aria-hidden="false" class="slds-accordion__content" id="accordion-details-02">
+                                    <div class="slds-form-element">                                        
+                                        <div class="slds-form-element__control">
+                                            <aura:if isTrue="{! v.currentUserId != v.v2momUserId }">
+                                                <aura:if isTrue="{!empty(v.v2momUserId)}" >
+                                                    <lightning:textarea name="inputArea2" class="vvtextarea" label="" value="{!v.value}" required="true" placeholder="Add Values"/>
+                                                    <aura:set attribute="else">
+                                                        <div class="slds-text-body_regular wordWrapBreak"><lightning:formattedText value="{!v.value}" /></div>
+                                                    </aura:set>
+                                                </aura:if>
+                                                <aura:set attribute="else">
+                                                    <aura:if isTrue="{!v.editVV}">
+                                                        <lightning:textarea name="inputArea2" class="vvtextarea" label="" value="{!v.value}" required="true" placeholder="Add Values"/>
+                                                        <aura:set attribute="else">
+                                                            <div class="slds-text-body_regular wordWrapBreak"><lightning:formattedText value="{!v.value}" /></div>
+                                                        </aura:set>
+                                                    </aura:if>
+                                                </aura:set>
+                                            </aura:if>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </li>
+                    </ul>
+                </div>
+                
+                <aura:if isTrue="{! v.currentUserId != v.v2momUserId }">
+                    <aura:if isTrue="{!empty(v.v2momUserId)}" >
+                        <div class="slds-m-around_top dropdowntabs">
+                            <lightning:button class="slds-align_absolute-center " variant="brand" label="Save Vision &amp; Values" title="" onclick="{! c.saveV2VJS }" />
+                        </div>
+                        <aura:set attribute="else">
+                            &nbsp;
+                        </aura:set>
+                    </aura:if>
+                    <aura:set attribute="else">
+                        <aura:if isTrue="{!v.editVV}">
+                            <lightning:button class="slds-align_absolute-center " variant="brand" label="Save Vision &amp; Values" title="" onclick="{! c.saveV2VJS }" />
+                            <aura:set attribute="else">
+                                <lightning:button class="slds-align_absolute-center " variant="brand" label="Edit Vision &amp; Values" title="" onclick="{! c.editV2VJS }" />
+                            </aura:set>
+                        </aura:if>
+                    </aura:set>
+                </aura:if>
+                <br/>
+                <aura:if isTrue="{! and( !empty(v.v2momId),v.currentUserId == v.v2momUserId)}">
+                    <div class="dropdowntabs">
+                        <div class="slds-section slds-is-open">
+                            <h3 class="slds-section__title2">
+                                <button aria-controls="expando-unique-id2" aria-expanded="true" class="slds-button slds-section__title-action">
+                                    <!--lightning:icon iconName="utility:switch"/-->
+                                    <span class="slds-truncate" title="Section Title">METHODS AND MEASURES
+                                        
+                                        <lightning:helptext content="What actions (Methods) will you take to achieve your vision?
+                                                                     And, for each Method, how will you Measure success?"/>
+                                        
+                                    </span>
+                                </button>
+                            </h3>
+                            
+                            
+                            <div class="slds-p-around_medium">
+                                <center>
+                                    <lightning:buttonGroup >
+                                        <lightning:button variant="brand" label="Add Method" onclick="{! c.addMethod }" />
+                                        <aura:if isTrue="{!not(empty(v.newMnMWrapper.myMnM))}">
+                                            <lightning:button label="Prioritize Methods" disabled="{!or(lessthanorequal(v.newMnMWrapper.myMnM.length,1), v.selectedMnMTab != 'My')}" iconName="utility:sort" iconPosition="left" onclick="{!c.reorderMethods}"/>
+                                        </aura:if>
+                                    </lightning:buttonGroup>
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!!empty(v.v2momId)}">
+                    <div class="slds-p-horizontal_small allMnMs">
+                        <lightning:tabset onselect="{!c.setCurrentTab}">
+                            <lightning:tab label="My Methods &amp; Measures" id="My">
+                                <div class="slds-p-vertical_small">
+                                    <aura:if isTrue="{!v.newMnMWrapper.myMnM.length > 0}">
+                                        <aura:set attribute="else">
+                                            No Methods and Measures found.
+                                        </aura:set>
+                                        <aura:iteration items="{!v.newMnMWrapper.myMnM}" var="method">
+                                            <lightning:card class="allMnMsCard">
+                                                <aura:set attribute="title">
+                                                    <div class="slds-text-heading_small slds-truncate">{!method.Name}</div>
+                                                    <span class="duedate slds-truncate">{!method.Description__c}</span>
+                                                </aura:set>
+                                                <aura:set attribute="actions">
+                                                    <aura:if isTrue="{!v.currentUserId == v.v2momUserId}">
+                                                        <lightning:buttonGroup >
+                                                            <lightning:buttonIcon iconName="utility:edit" value="{!method}" onclick="{!c.addMethod }" />
+                                                            <lightning:buttonIcon iconName="utility:delete" value="{!method}" onclick="{!c.handleDeleteMethod }" />
+                                                        </lightning:buttonGroup>
+                                                    </aura:if>
+                                                </aura:set>
+                                                <div class="slds-p-horizontal_x-small">
+                                                    <aura:if isTrue="{!v.currentUserId == v.v2momUserId}">
+                                                        <lightning:button class="slds-box slds-box_x-small addMeasure slds-m-bottom_x-small" value="{!method.Id}" label="Add Measure" onclick="{!c.openMeasureModal}"/>
+                                                    </aura:if>
+                                                    <div class="slds-grid slds-wrap">
+                                                        <aura:iteration items="{!method.Measures__r}" var="measure">
+                                                            <div class="slds-size_1-of-2">
+                                                                <lightning:card class="allMnMsCard mh281 slds-m-around_x-small">
+                                                                    <aura:set attribute="title">
+                                                                        <div class="slds-text-heading_small slds-truncate">{!measure.Name}</div>
+                                                                        <span class="duedate">Due: <ui:outputDate value="{!measure.Completion_By_Date__c}"/></span>
+                                                                    </aura:set>
+                                                                    <aura:set attribute="actions">
+                                                                        <lightning:buttonGroup >
+                                                                            <lightning:buttonIcon iconName="utility:chat" name="{!measure.Name}" value="{!measure.Id}" onclick="{!c.showMeasureChatter}" />
+                                                                            <aura:if isTrue="{!v.currentUserId == v.v2momUserId}">
+                                                                                <lightning:buttonIcon iconName="utility:edit" value="{!measure}" onclick="{!c.editMeasureAction }" />
+                                                                                <lightning:buttonIcon iconName="utility:delete" value="{!measure}" onclick="{!c.handleDeleteMeasure }" />
+                                                                            </aura:if>
+                                                                            <lightning:buttonMenu class="slds-button_last button_transparent" iconName="utility:threedots" name="{!measure.Name}" aura:id="menu" value="{!measure}" menuAlignment="right" alternativeText="Show menu" onselect="{! c.measureHandleSelect }">
+                                                                                <lightning:menuItem label="View Obstacles &amp; Comments" value="View Obstacles and Comments" />
+                                                                                <aura:if isTrue="{!and(greaterthan(v.numberOfReportees,0),equals(v.currentUserId,v.v2momUserId))}"><lightning:menuItem label="Assign this measure" value="Assign this measure"/></aura:if>
+                                                                                <aura:if isTrue="{!notequals(v.currentUserId,v.v2momUserId)}"><lightning:menuItem label="Copy to my V2MOM" value="Copy to my V2MOM"/></aura:if>
+                                                                            </lightning:buttonMenu>
+                                                                        </lightning:buttonGroup>
+                                                                    </aura:set>
+                                                                    <div class="slds-p-horizontal_x-small">
+                                                                        <c:V2MOM_HomeCard measure="{!measure}"/>
+                                                                    </div>
+                                                                </lightning:card>
+                                                            </div>
+                                                        </aura:iteration>
+                                                    </div>
+                                                </div>
+                                            </lightning:card>
+                                        </aura:iteration>
+                                    </aura:if>
+                                </div>
+                            </lightning:tab>
+                            <lightning:tab label="Assigned" id="Assigned">
+                                <div class="slds-p-vertical_small">
+                                    <aura:if isTrue="{!v.newMnMWrapper.assignedMnM.length > 0}">
+                                        <aura:set attribute="else">
+                                            No Methods and Measures were assigned.
+                                        </aura:set>
+                                        <aura:iteration items="{!v.newMnMWrapper.assignedMnM}" var="measureTeamWrap">
+                                            <lightning:card class="allMnMsCard">
+                                                <aura:set attribute="title">
+                                                    <div class="slds-text-heading_small slds-truncate">{!measureTeamWrap.method.Name}</div>
+                                                    <span class="duedate slds-truncate">{!measureTeamWrap.method.Description__c}</span>
+                                                </aura:set>
+                                                <div class="slds-p-horizontal_x-small">
+                                                    <div class="slds-grid slds-wrap">
+                                                        <aura:iteration items="{!measureTeamWrap.measures}" var="measure">
+                                                            <div class="slds-size_1-of-2">
+                                                                <lightning:card class="allMnMsCard slds-m-around_xx-small">
+                                                                    <aura:set attribute="title">
+                                                                        <div class="slds-text-heading_small slds-truncate">{!measure.Measure__r.Name}</div>
+                                                                        <span class="duedate">Due: <ui:outputDate value="{!measure.Measure__r.Completion_By_Date__c}"/></span>
+                                                                    </aura:set>
+                                                                    <aura:set attribute="actions">
+                                                                        <lightning:buttonGroup >
+                                                                            <aura:if isTrue="{!v.currentUserId == v.v2momUserId}">
+                                                                                <lightning:buttonIcon iconName="utility:priority" name="{!measure.Name}" value="{!measure}" onclick="{!c.viewAssignedMeasureObstaclesAndComments}"/>
+                                                                            </aura:if>
+                                                                            <lightning:buttonIcon iconName="utility:chat" name="{!measure.Measure__r.Name}" value="{!measure.Id}" onclick="{!c.showMeasureChatter}"/>
+                                                                            <aura:if isTrue="{!v.currentUserId == v.v2momUserId}">
+                                                                                <lightning:buttonIcon iconName="utility:edit" value="{!measure}" onclick="{!c.editAssignedMeasure}" />
+                                                                            </aura:if>
+                                                                        </lightning:buttonGroup>
+                                                                    </aura:set>
+                                                                    <div class="slds-p-horizontal_x-small">
+                                                                        <c:V2MOM_HomeCard measure="{!measure}" isMeasureTeam="true"/>
+                                                                    </div>
+                                                                </lightning:card>
+                                                            </div>
+                                                        </aura:iteration>
+                                                    </div>
+                                                </div>
+                                            </lightning:card>
+                                        </aura:iteration>
+                                    </aura:if>
+                                </div>
+                            </lightning:tab>
+                        </lightning:tabset>
+                    </div>
+                </aura:if>
+            </lightning:tab>
+            <aura:if isTrue="{! v.currentUserId == v.v2momUserId}">
+                <aura:if isTrue="{!v.isManager}">
+                    <lightning:tab label="TEAM">
+                        <c:V2MOM_TeamViewCmp v2momId="{!v.v2momId}"/>
+                    </lightning:tab>
+                </aura:if>
+            </aura:if>
+        </lightning:tabset>
+    </div>
+    
+</aura:component>

@@ -1,0 +1,72 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global" controller="V2MOM_Controller">
+	
+    <aura:attribute name="measure" type="Measure__c" />
+    
+    <aura:attribute name="MeasureId" type="string"/>
+    <aura:attribute name="MeasureObstacle" type="string"/>
+    <aura:attribute name="MeasureComment" type="string"/>
+    <aura:attribute name="isReadOnly" type="boolean" default="true"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <aura:attribute name="currentMeasureName" type="string"/>
+    <aura:method name="showObstaclesComments">
+        <aura:attribute name="measureName" type="string"/>
+        <aura:attribute name="measureId" type="string"/>
+        <aura:attribute name="currentUserId" type="String" />
+        <aura:attribute name="v2momUserId" type="String" />
+        <aura:attribute name="isAssignedMeasure" type="Boolean"/>
+    </aura:method>
+    
+    <section aura:id="srModal" role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-describedby="modal-content-id-1" class="slds-modal">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <lightning:buttonIcon class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" iconName="utility:close" variant="bare" alternativeText="Settings" onclick="{!c.closeModal}"/>
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Obstacles And Comments</h2>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label slds-align-middle">Obstacles
+                            <lightning:helptext content="Challenges to overcome the measure"/>
+                        </label>
+                            <aura:if isTrue="{!v.isReadOnly}">
+                                <aura:if isTrue="{!empty(v.measure.Obstacles__c)}">
+                                    <div>No obstacles were found for the measure.</div>
+                                    <aura:set attribute="else">
+                                        <div>{!v.measure.Obstacles__c}</div>
+                                    </aura:set>
+                                </aura:if>
+                                <aura:set attribute="else">
+                                    <ui:inputTextArea aura:id="comments" class="slds-textarea" value="{!v.measure.Obstacles__c}" rows="5" disabled="{!v.isReadOnly}"/>
+                                    <!--<lightning:textarea placeholder="Add an obstacle" aura:id="comments" class="slds-textarea" value="{!v.measure.Obstacles__c}" disabled="{!v.isReadOnly}"/>-->
+                                </aura:set>
+                            </aura:if>
+                    </div>
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label slds-align-middle">Comments
+                            <lightning:helptext content="Remarks for the measures"/>
+                        </label>
+                        <aura:if isTrue="{!v.isReadOnly}">
+                            <aura:if isTrue="{!empty(v.measure.Comments__c)}">
+                                <div>No comments were found for the measure.</div>
+                                <aura:set attribute="else">
+                                    <div>{!v.measure.Comments__c}</div>
+                                </aura:set>
+                            </aura:if>
+                            <aura:set attribute="else">
+                                <ui:inputTextArea aura:id="comments" class="slds-textarea" value="{!v.measure.Comments__c}" rows="5" disabled="{!v.isReadOnly}"/>
+                                <!--<lightning:textarea placeholder="Add a" aura:id="comments" class="slds-textarea" value="{!v.measure.Comments__c}" disabled="{!v.isReadOnly}"/>-->
+                            </aura:set>
+                        </aura:if>
+                    </div>
+            </div>
+            <footer class="slds-modal__footer">
+                <lightning:button variant="neutral" label="{!v.isReadOnly ? 'Close' : 'Cancel'}" onclick="{!c.closeModal}"/>
+                <aura:if isTrue="{!v.isReadOnly == false}">
+                         <lightning:button variant="brand" label="Save" onclick="{!c.saveObsComm}"/>
+                </aura:if>
+            </footer>
+        </div>
+    </section>
+    <div aura:id="modalBkdrp" class="slds-backdrop"></div>
+</aura:component>

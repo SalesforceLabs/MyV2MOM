@@ -1,0 +1,5 @@
+<aura:event type="Component" description="Event template" >
+    <aura:attribute name="action" type="String"/>
+    <aura:attribute name="measure" type="Object"/>
+    <aura:attribute name="isMeasureTeam" type="Boolean"/>
+</aura:event>

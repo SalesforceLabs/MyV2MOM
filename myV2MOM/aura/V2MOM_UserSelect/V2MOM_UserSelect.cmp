@@ -1,0 +1,14 @@
+<aura:component controller="V2MOM_UtilCls">
+    
+    <aura:attribute name="selectedUsers" type="string"/>
+    <aura:attribute name="userList" type="list"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <c:V2MOM_MultiSelect value="{!v.selectedUsers}" aura:id="teamMembers" placeholder="Search Team Members" label="Team Members"> 
+        <aura:iteration items="{!v.userList}" var="user"> 
+            <c:custom_option label="{!user.Name}" value="{!user.Id}"/> 
+        </aura:iteration> 
+    </c:V2MOM_MultiSelect>
+    
+</aura:component>

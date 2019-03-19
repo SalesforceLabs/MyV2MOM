@@ -1,0 +1,49 @@
+.THIS .Or{
+    margin-top: 20px;
+    font-size: 20px;
+}
+.THIS .slds-modal__content{
+    overflow-wrap: initial;
+    word-wrap: initial;
+}
+.THIS .slds-modal__header{
+    background-color:#F5F5F9;
+}
+.THIS #trackprogressby{
+    background-color:#F5F5F9;    
+}
+
+.THIS .slds-p-horizontal_medium{
+    padding-right: 0px;
+    padding-left: 0px;
+}
+.THIS .measureName{
+        padding-left: 0px;
+    padding-right: 0px;
+    border: 0px;
+}
+.THIS .slds-form-element {
+    position: relative;
+    border: none !important;
+}
+.THIS .slds-modal__content{
+    max-height: 70%;
+}
+
+.THIS .slds-form-element__control{
+    display: block;
+}
+
+.THIS .textAreaLabel label{
+    display: none;
+}
+
+.THIS .legendNone legend{
+    display: none;
+}
+.THIS .lineheight1875{
+    line-height: 1.875rem;
+}
+.THIS .completionDateError{
+    color : red;
+}

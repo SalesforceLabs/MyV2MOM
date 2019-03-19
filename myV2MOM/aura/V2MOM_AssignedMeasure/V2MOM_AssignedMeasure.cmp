@@ -1,0 +1,62 @@
+<aura:component >
+    <aura:attribute name="measure" type="Object"/>
+    <aura:registerEvent name="mtEvent" type="c:V2MOM_ChildRecordEvent"/>
+    <aura:method name="editMethod">
+        <aura:attribute name="measure" type="Object"/>
+    </aura:method>
+    
+    <section aura:id="srModal" role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-describedby="modal-content-id-1" class="slds-modal">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <lightning:buttonIcon class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" iconName="utility:close" variant="bare" alternativeText="Settings" onclick="{!c.closeModal}"/>
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Edit Measure</h2>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium">
+                <div class="slds-form slds-form_compound">
+                    <div class="slds-form-element__group">
+                        <div class="slds-form-element__row">
+                            <div class="slds-form-element slds-size_1-of-2">
+                                <lightning:input name="input" readonly="true" value="{!v.measure.Measure__r.Name}" label="Measure Name" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-form-element__group">
+                        <div class="slds-form-element__row">
+                            <aura:if isTrue="{!equals(v.measure.Measure__r.Track_Progress_By__c, 'Numbers Completed')}">
+                                <aura:set attribute="else">
+                                    <aura:if isTrue="{!equals(v.measure.Measure__r.Track_Progress_By__c, 'Completion Status')}">
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <lightning:select name="MeasureStatus" label="Status" value="{!v.measure.Status__c}">
+                                                <option value="On Track">On Track</option>
+                                                <option value="Not Started">Not Started</option>
+                                                <option value="Behind Schedule">Behind Schedule</option>
+                                                <option value="On Hold">On Hold</option>
+                                                <option value="Completed">Completed</option>
+                                            </lightning:select>
+                                        </div>
+                                    </aura:if>
+                                </aura:set>
+                                <div class="slds-form-element slds-size_1-of-2">
+                                    <div class="slds-form-element">
+                                        <label class="slds-form-element__label">Target Value</label>
+                                        <div class="slds-form-element__control lineheight1875">
+                                            <lightning:formattedNumber value="{!v.measure.Target_Value__c}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-form-element slds-size_1-of-2">
+                                    <lightning:input name="input2" type="number" value="{!v.measure.Current_Value__c}" label="Current Value"/>
+                                </div>
+                            </aura:if>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="slds-modal__footer">
+                <lightning:button variant="neutral" label="Cancel" onclick="{!c.closeModal}"/>
+                <lightning:button variant="brand" label="Save" onclick="{!c.SaveAssignedMeasure}"/>
+            </footer>
+        </div>
+    </section>
+    <div aura:id="modalBkdrp" class="slds-backdrop"></div>
+</aura:component>

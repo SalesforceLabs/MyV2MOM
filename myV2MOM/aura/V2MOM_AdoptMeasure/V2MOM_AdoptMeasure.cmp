@@ -1,0 +1,54 @@
+<aura:component controller="V2MOM_UtilCls">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="currentV2MOMMethods" type="List" />
+    <aura:attribute name="options_Measure" type="List" default="[
+                                                                {'label': 'Existing Method', 'value': 'Existing Measure'},
+                                                                {'label': 'New Method', 'value': 'New Measure'}
+                                                                ]"/>
+    <aura:attribute name="selectedOption_Measure" type="String" default="Existing Measure"/>
+    <aura:attribute name="currentUserV2MOMId" type="string"/>
+    <aura:attribute name="SelectecMeasureRecord" type="Object" />
+    <aura:method name="adoptMeasure" action="{!c.adoptMeasure}" access="PUBLIC">
+        <aura:attribute name="measureRecord" type="Object" />
+    </aura:method>
+    
+    <aura:attribute name="newMeasureName" type="string"/>
+    <aura:attribute name="selectedMeasure" type="string"/>
+    
+    <section aura:id="srModal" role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-describedby="modal-content-id-1" class="slds-modal">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <lightning:buttonIcon class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" iconName="utility:close" variant="bare" alternativeText="Settings" onclick="{!c.closeModal}"/>
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Copy to my V2MOM</h2>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium">
+                <lightning:radioGroup name="radioButtonGroup"
+                                      label="Copy Measure to"
+                                      options="{!v.options_Measure}"
+                                      value="{!v.selectedOption_Measure}"
+                                      type="button"/>
+                <br/>
+                <aura:if isTrue="{!v.selectedOption_Measure == 'New Measure'}">
+                    <lightning:input label="New Method Name" name="new_MeasureName" aura:id="newMeasureName" value="{!v.newMeasureName}"/>
+                    <aura:set attribute="else">
+                        <aura:if isTrue="{!empty(v.currentV2MOMMethods)}">
+                            You do not have any methods in your current V2MOM.
+                            <aura:set attribute="else">
+                                <lightning:select aura:id="selectMeasure" name="select" label="Select a Method" value="{!v.selectedMeasure}">
+                                    <aura:iteration items="{!v.currentV2MOMMethods}" var="currentV2MOMMethod">
+                                        <option value="{!currentV2MOMMethod.Id}">{!currentV2MOMMethod.Name}</option>
+                                    </aura:iteration>
+                                </lightning:select>
+                            </aura:set>
+                        </aura:if>
+                    </aura:set>
+                </aura:if>
+            </div>
+            <footer class="slds-modal__footer">
+                <lightning:button variant="neutral" label="Cancel" onclick="{!c.closeModal}"/>
+                <lightning:button variant="brand" label="Save" onclick="{!c.save}"/>
+            </footer>
+        </div>
+    </section>
+    <div aura:id="modalBkdrp" class="slds-backdrop"></div>
+</aura:component>
