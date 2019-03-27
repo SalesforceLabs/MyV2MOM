@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2018, salesforce.com, inc.
+ * All rights reserved.
+ * SPDX-License-Identifier: BSD-3-Clause
+ * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
 /* This class helps in manually sharing the records. 
  * Used without sharing keyword, as the org-wide default is public read-only. */
 public without sharing class MeasureChatterCtrlSharing {
