@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <name>V2MOM Quarterly Reminder</name>
+    <style>none</style>
+    <subject>V2MOM Quarterly Reminder</subject>
+    <textOnly>Hi {!User.Name}, 
+
+We are approaching the end of Fiscal Quarter. Please update your V2MOM.  
+
+Thank you !!</textOnly>
+    <type>custom</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

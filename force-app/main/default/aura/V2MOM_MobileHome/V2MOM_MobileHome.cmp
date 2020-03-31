@@ -1,0 +1,176 @@
+<aura:component controller="V2MOM_MobileCtrl" access="global">
+    <aura:attribute name="userList" type="List" />
+    <aura:attribute name="issearching" type="Boolean" default="false"/>
+    <aura:attribute name="currentTab" type="Integer" default="1"/>
+    
+    <aura:attribute name="v2momId" type="String" default=""/>
+    <aura:attribute name="v2momUserId" type="String" />
+    <aura:attribute name="currentUserId" type="String"/>
+    <aura:attribute name="isManager" type="boolean" />
+    <aura:attribute name="v2momObj" type="V2MOM__c" />
+    <aura:attribute name="managerV2MOMId" type="String"/>
+    <aura:attribute name="v2momOptions" type="List" />
+    <aura:attribute name="v2momOptionsArr" type="List" />
+    <aura:attribute name="lastupdatedDate" type="String" />
+    
+    <aura:attribute name="selV2MOM" type="String" />
+    <aura:attribute name="currentUserV2MOMId" type="String"/>
+    
+    <aura:attribute name="mobileV2Cmp" type="Aura.Component[]" />
+    <aura:attribute name="mobileMOMCmp" type="Aura.Component[]" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.selV2MOM}" action="{!c.selV2MOMChange}"/>
+    
+    <ltng:require styles="{!$Resource.V2MOM_Mobile}"/>
+        <aura:if isTrue="{!not(empty(v.v2momId))}">
+        <div class="slds-page-header">
+            <div class="slds-media">
+                <div class="slds-media__body">
+                    <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="{!v.v2momObj.Name}">
+                        <aura:if isTrue="{!empty(v.v2momObj.Name)}">
+                            <aura:set attribute="else">
+                                {!v.v2momObj.Name}
+                            </aura:set>
+                        </aura:if>
+                    </h1>
+                </div>
+            </div>
+        </div>
+        </aura:if>
+        <div class="{!v.currentTab == 1 ? 'slds-show':'slds-hide'}">
+            <aura:if isTrue="{!empty(v.v2momId)}">
+                
+                <div class="slds-container_small mAuto">
+                    <div class="slds-p-around_medium">
+                        <div class="slds-p-around_medium dotBorder">
+                            <center>
+                                <p class="slds-text-heading_small">Looks like there's some work to be done!</p>
+                                <img src="{!$Resource.V2MOMAssets + '/Astro.png'}" alt="Astro" class="slds-m-top_medium"/>
+                                <lightning:button variant="brand" label="Start your V2MOM" title="" aura:id="2" onclick="{! c.handleDelectedTab }" class="slds-m-top_medium btnWidth80"/>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+                
+                <aura:set attribute="else">
+                    <div class="slds-m-top_large">
+                        <ul class="slds-has-dividers_bottom-space">
+                            <aura:if isTrue="{!v.v2momOptionsArr.length > 0}">
+                                <li class="slds-item">
+                                    <dl>
+                                        <lightning:select name="mySelect" label="View V2MOM" aura:id="v2momSelect" value="{!v.selV2MOM}" class="width30">
+                                            <aura:iteration items="{!v.v2momOptionsArr}" var="item">
+                                                <option text="{!item.label}" value="{!item.value}" selected="{!item.selected}"/>
+                                            </aura:iteration>
+                                        </lightning:select>
+                                    </dl>
+                                </li>
+                            </aura:if>
+                            <li class="slds-item">
+                                <dl>
+                                    <dt class="slds-form-element__label">Status</dt>
+                                    <dd>
+                                        <aura:if isTrue="{! v.v2momObj.Status__c == 'Draft'}">
+                                            <span class="slds-badge" style="vertical-align: middle !important;">
+                                                {!v.v2momObj.Status__c}
+                                            </span>
+                                        </aura:if>
+                                        <aura:if isTrue="{! v.v2momObj.Status__c == 'Published'}">
+                                            <span class="slds-badge" style="background-color: #4bb781 !important; vertical-align: middle !important;">
+                                                {!v.v2momObj.Status__c}
+                                            </span>
+                                        </aura:if>
+                                    </dd>
+                                </dl>
+                            </li>
+                            <li class="slds-item">
+                                <dl>
+                                    <dt class="slds-form-element__label">Last Updated Date</dt>
+                                    <dd><ui:outputDate value="{!v.lastupdatedDate}"/></dd>
+                                </dl>
+                            </li>
+                            <li class="slds-item">
+                                <dl>
+                                    <dt class="slds-form-element__label">Last Published Date</dt>
+                                    <dd><ui:outputDate value="{!v.v2momObj.Published_Date__c}"/></dd>
+                                </dl>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="slds-m-around_large">
+                        <center>
+                            <lightning:buttonGroup >
+                                <aura:if isTrue="{!v.currentUserId == v.v2momUserId}">
+                                    <lightning:button variant="success" label="Publish" title="Publish" onclick="{! c.publishV2MOMJS }"/>
+                                </aura:if>
+                                <aura:if isTrue="{! and(v.currentUserId == v.v2momUserId, v.managerV2MOMId != undefined)}">
+                                    <lightning:button variant="brand" label="Manager V2MOM" onclick="{! c.navManagerV2MOM }" />
+                                </aura:if>
+                                <aura:if isTrue="{!v.currentUserId != v.v2momUserId}">
+                                    <lightning:button label="My V2MOM" variant="Neutral" value="{!v.currentUserV2MOMId}" onclick="{!c.navToCurrV2mom}"/>
+                                </aura:if>
+                            </lightning:buttonGroup>
+                        </center>
+                    </div>
+                </aura:set>
+            </aura:if>
+            
+        </div>
+        <div class="{!v.currentTab == 2 ? 'slds-show':'slds-hide'}">
+            {!v.mobileV2Cmp}
+        </div>
+        <div class="{!v.currentTab == 3 ? 'slds-show':'slds-hide'}">
+            {!v.mobileMOMCmp}
+        </div>
+        
+        <aura:if isTrue="{! or(v.currentUserId == v.v2momUserId, empty(v.v2momId))}">
+            <aura:if isTrue="{!v.isManager}">
+                <div class="{!v.currentTab == 4 ? 'slds-show':'slds-hide'}">
+                    <c:V2MOM_TeamViewCmp v2momId="{!v.v2momId}"/>	
+                </div>
+            </aura:if>
+        </aura:if>
+    
+        
+        <div class="slds-docked-form-footer">
+        <ul>
+            <li class="slds-has-divider_top-space" role="separator"></li>
+        </ul>
+        <lightning:tabset >
+            <lightning:tab aura:id="1" onactive="{!c.handleDelectedTab}" class="{! and(or(v.currentUserId == v.v2momUserId, empty(v.v2momId)), v.isManager) ? 'w25' : 'w33'}">
+                <aura:set attribute="label">
+                    <lightning:icon iconName="utility:home" size="x-small"/>
+                    <p class="font7">HOME</p>
+                </aura:set>
+            </lightning:tab>
+            
+            <lightning:tab aura:id="2" onactive="{!c.handleDelectedTab}" class="{! and(or(v.currentUserId == v.v2momUserId, empty(v.v2momId)), v.isManager) ? 'w25' : 'w33'}">
+                <aura:set attribute="label">
+                    <lightning:icon iconName="utility:connected_apps" size="x-small"/>
+                    <p class="font7">V2</p>
+                </aura:set>
+            </lightning:tab>
+            
+            <lightning:tab aura:id="3" onactive="{!c.handleDelectedTab}" class="{! and(or(v.currentUserId == v.v2momUserId, empty(v.v2momId)), v.isManager) ? 'w25' : 'w33'}">
+                <aura:set attribute="label">
+                    <lightning:icon iconName="utility:chart" size="x-small"/>
+                    <p class="font7">MOM</p>
+                </aura:set>
+            </lightning:tab>
+            
+            <aura:if isTrue="{! or(v.currentUserId == v.v2momUserId, empty(v.v2momId))}">
+                <aura:if isTrue="{!v.isManager}">
+                    <lightning:tab aura:id="4" onactive="{!c.handleDelectedTab}" class="{! and(or(v.currentUserId == v.v2momUserId, empty(v.v2momId)), v.isManager) ? 'w25' : 'w33'}">
+                        <aura:set attribute="label">
+                            <lightning:icon iconName="utility:groups" size="x-small"/>
+                            <p class="font7">TEAM</p>
+                        </aura:set>
+                    </lightning:tab>
+                </aura:if>
+            </aura:if>
+        </lightning:tabset>
+    </div>
+        <!--c:V2MOM_Bottom_Menu ></c:V2MOM_Bottom_Menu-->
+</aura:component>

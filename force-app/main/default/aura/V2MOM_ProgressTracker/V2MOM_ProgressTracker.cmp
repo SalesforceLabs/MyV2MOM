@@ -1,0 +1,44 @@
+<aura:component >
+    <aura:attribute name="currentVal" type="decimal"/>
+    <aura:attribute name="targetVal" type="decimal"/>
+    <aura:attribute name="hasNumber" type="Boolean" default="true"/>
+    <aura:attribute name="status" type="String"/>
+    
+    <!--<ltng:require styles="{!$Resource.progress_bar_css}"/>-->
+    
+    <ltng:require scripts="{!$Resource.V2MOMProgressBar}" afterScriptsLoaded="{!c.scriptsLoaded}"/>
+
+    <center>
+    	<div class="progressBar" aura:id="container"></div>
+    </center>
+    
+    <!--<aura:if isTrue="{!and(v.hasNumber, not(empty(v.currentVal)), not(empty(v.targetVal)))}">
+        <aura:if isTrue="{!(v.currentVal/v.targetVal) * 100 >= 100}">
+            <div class="progress-circle over50 p100}">
+                <span class="number"><lightning:formattedNumber maximumFractionDigits="1" value="{!(v.currentVal/v.targetVal)}" style="percent"/></span>
+                <div class="left-half-clipper">
+                    <div class="first50-bar"></div>
+                    <div class="value-bar"></div>
+                </div>
+            </div>
+            <aura:set attribute="else">
+                <div class="{!(v.currentVal/v.targetVal) * 100 > 50 ? 'progress-circle over50' : 'progress-circle'}">
+                    <span><lightning:formattedNumber maximumFractionDigits="1" value="{!(v.currentVal/v.targetVal)}" style="percent"/></span>
+                    <div class="left-half-clipper">
+                        <div class="first50-bar"></div>
+                        <div class="value-bar" style="{!'transform: rotate('+(v.currentVal/v.targetVal) * 360+'deg)'}"></div>
+                    </div>
+                </div>
+            </aura:set>
+        </aura:if>
+        <aura:set attribute="else">
+			<div class="progress-circle over50 p100">
+                    <span class="status">{!v.status}</span>
+                    <div class="left-half-clipper">
+                        <div class="first50-bar"></div>
+                        <div class="value-bar"></div>
+                    </div>
+                </div>
+        </aura:set>
+    </aura:if>-->
+</aura:component>

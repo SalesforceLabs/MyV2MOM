@@ -1,0 +1,226 @@
+<aura:component >
+    
+    <!--<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>-->
+    
+    <aura:attribute name="mt" type="string"/>
+    <aura:attribute name="mMap" type="Object"/>
+    <aura:attribute name="MnMMap" type="Object"/>
+    
+    <aura:attribute name="searchString" type="string"/>
+    <aura:handler name="change" value="{!v.searchString}" action="{!c.handleSearch}"/>
+    
+    <aura:attribute name="CurrentMethod" type="Object"/>
+    <aura:attribute name="AllMeasures" type="List"/>
+    <aura:attribute name="CurrentMeasures" type="List"/>
+    
+    <aura:attribute name="currentUserId" type="String"/>
+    <aura:attribute name="v2momUserId" type="String" />
+    
+    <aura:attribute name="numberOfReportees" type="Integer"/>
+    
+    <aura:handler name="change" value="{!v.MnMMap}" action="{!c.mMapchange}"/>
+    <aura:registerEvent name="V2MOMMobileEvt" type="c:V2MOMMobileEvt"/> 
+    
+    <!---->
+    <aura:attribute name="isMeasureTeam" type="Boolean" default="false"/>
+    <aura:attribute name="showQuarter" type="Boolean" default="false"/>
+    <!---->
+    
+    <lightning:card aura:id="methodId">
+        <aura:set attribute="title">
+            {!v.CurrentMethod.Name}
+        </aura:set>
+        <!--<aura:set attribute="actions">
+            <aura:if isTrue="{!equals(v.currentUserId,v.v2momUserId)}"><lightning:button label="Measure" iconName="utility:add" iconPosition="left"/></aura:if>
+        </aura:set>-->
+        <div>
+            <lightning:layout multipleRows="true">
+                <aura:iteration items="{!v.CurrentMeasures}" var="m" indexVar="idx">
+                    <!--size="6" smallDeviceSize="12" mediumDeviceSize="6" largeDeviceSize="6" flexibility="no-shrink"-->
+                    <lightning:layoutItem padding="around-small" size="12" aura:id="measureId">
+                        <lightning:card >
+                            <aura:set attribute="title">
+                                <div class="slds-m-bottom_small"><span class="slds-badge">{!!v.isMeasureTeam ? m.Priority__c : m.Measure__r.Priority__c}</span><span class="slds-m-left_small slds-badge">{!m.teamMeasureType}</span></div>
+                                <span class="slds-text-heading_small">{!!v.isMeasureTeam ? m.Name : m.Measure__r.Name}</span>
+                                <p class="slds-text-color_weak ft12px">Due: <ui:outputDate value="{!!v.isMeasureTeam ? m.Completion_By_Date__c : m.Measure__r.Completion_By_Date__c}"/></p>
+                            </aura:set>
+                            <aura:set attribute="actions">
+                                <lightning:buttonMenu name="{!m.Name}" variant="container" aura:id="menu" value="{!m}" menuAlignment="right" iconName="utility:threedots" alternativeText="Show menu" onselect="{!c.measureHandleSelect}">
+                                    <!--<aura:if isTrue="{!equals(v.currentUserId,v.v2momUserId)}"><lightning:menuItem label="Edit" value="Edit"/></aura:if>-->
+                                    <lightning:menuItem label="View Obstacles &amp; Comments" value="View Obstacles and Comments"/>
+                                    <aura:if isTrue="{!and(greaterthan(v.numberOfReportees,0),equals(v.currentUserId,v.v2momUserId))}"><lightning:menuItem label="Assign this measure" value="Assign this measure"/></aura:if>
+                                    <!--<lightning:menuItem label="Assign this measure" value="Assign this measure"/>-->
+                                    <aura:if isTrue="{!and(notequals(v.currentUserId,v.v2momUserId),not(v.isMeasureTeam))}"><lightning:menuItem label="Copy to my V2MOM" value="Copy to my V2MOM"/></aura:if>
+                                </lightning:buttonMenu>
+                            </aura:set>
+                            <aura:set attribute="footer">
+                                <div class="slds-clearfix">
+                                    <div class="slds-float_left">
+                                        <div onclick="{!c.showComments}" data-measureId="{!idx}"><lightning:icon iconName="utility:comments" size="x-small"/> <span class="ft12px">Comment</span></div>
+                                    </div>
+                                    <div class="slds-float_right">
+                                        <aura:if isTrue="{!and(m.Split_By_Quarter__c, not(v.isMeasureTeam))}">
+                                            <aura:if isTrue="{!!v.showQuarter}">
+                                                <a href="javascript:void(0);" class="ft12px" data-value="{!m}" data-name="{!m.Name}" onclick="{!c.toggleViewAllQuarters}">View All Quarters</a>
+                                                <aura:set attribute="else">
+                                                    <a href="javascript:void(0);" class="ft12px" onclick="{!c.toggleViewAllQuarters}">Close</a>
+                                                </aura:set>
+                                            </aura:if>
+                                        </aura:if>
+                                    </div>
+                                </div>
+                            </aura:set>
+                            <div class="slds-m-horizontal_medium">
+                                <aura:if isTrue="{!or(equals(m.Track_Progress_By__c,'Numbers Completed'), equals(m.Measure__r.Track_Progress_By__c,'Numbers Completed'))}">
+                                    <aura:if isTrue="{!!v.showQuarter}">
+                                        <div class="slds-clearfix">
+                                            <div class="slds-float_right">
+                                                <aura:if isTrue="{!v.isMeasureTeam}">
+                                                    <p class="slds-text-color_weak ft12px">{!m.Current_Value__c}/{!m.Target_Value__c}</p>
+                                                    <aura:set attribute="else">
+                                                        <p class="slds-text-color_weak ft12px">{!m.Total_Current_Value__c}/{!m.Target_Value__c}</p>
+                                                    </aura:set>
+                                                </aura:if>
+                                            </div>
+                                        </div>
+                                        <aura:if isTrue="{!v.isMeasureTeam}">
+                                            <lightning:progressBar value="{!(m.Current_Value__c / m.Target_Value__c) * 100}"/>
+                                            <aura:set attribute="else">
+                                                <lightning:progressBar value="{!(m.Total_Current_Value__c / m.Target_Value__c) * 100}"/>
+                                            </aura:set>
+                                        </aura:if>
+                                        <aura:set attribute="else">
+                                            <center>
+                                                <div class="slds-grid slds-grid_align-space slds-wrap">
+                                                    <div class="slds-p-horizontal slds-medium-size_1-of-4">     
+                                                        <div class="gauge">
+                                                            <aura:if isTrue="{!notequals(m.Q1__c,null)}">
+                                                                <aura:if isTrue="{!lessthanorequal(m.Q1_Target__c,m.Q1__c)}">
+                                                                    <img alt="" class="w3rem slds-m-bottom_small" src="{!$Resource.V2MOMAssets + '/happy.png'}"/>
+                                                                    <aura:set attribute="else">
+                                                                        <img alt="" class="w3rem slds-m-bottom_small" src="{!$Resource.V2MOMAssets + '/sad.png'}"/> 
+                                                                    </aura:set>
+                                                                </aura:if>    
+                                                                <img alt="" class="imgQuarter" src=""/>
+                                                                <div class="status ">
+                                                                    <img alt="" class="slds-m-bottom_small" src="{!$Resource.Q1_placeholder}" width="44" height="44"/>
+                                                                </div>
+                                                                <p class="status"><lightning:formattedNumber value="{!m.Q1_Completion__c}"/>%<br/></p>   
+                                                                <aura:set attribute="else">
+                                                                    <img alt="" class="w3rem slds-m-bottom_small" src="{!$Resource.V2MOMAssets + '/neutral.png'}"/>
+                                                                    <img alt="" class="imgQuarter" src=""/>
+                                                                    <div class="status ">
+                                                                        <img alt="" class="slds-m-bottom_small" src="{!$Resource.Q1_placeholder}" width="44" height="44"/>
+                                                                    </div>
+                                                                    <p class="status"> No Value <br/></p>
+                                                                </aura:set>
+                                                            </aura:if>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                    
+                                                    
+                                                    <div class="slds-p-horizontal slds-medium-size_1-of-4">     
+                                                        <div class="gauge">  
+                                                            <aura:if isTrue="{!notequals(m.Q2__c,null)}">
+                                                                <aura:if isTrue="{!lessthanorequal(m.Q2_Target__c,m.Q2__c)}">
+                                                                    <img alt="" class="w3rem slds-m-bottom_small" src="{!$Resource.V2MOMAssets + '/happy.png'}"/>
+                                                                    <aura:set attribute="else">
+                                                                        <img alt="" class="w3rem slds-m-bottom_small" src="{!$Resource.V2MOMAssets + '/sad.png'}"/>
+                                                                    </aura:set>
+                                                                </aura:if>    
+                                                                <img alt="" class="imgQuarter" src=""/>
+                                                                <div class="status ">
+                                                                    <img alt="" class="slds-m-bottom_small" src="{!$Resource.Q2_placeholder}" width="44" height="44"/>
+                                                                </div>
+                                                                <p class="status"><lightning:formattedNumber value="{!m.Q2_Completion__c}"/>%<br/></p>   
+                                                                <aura:set attribute="else">
+                                                                    <img alt="" class="w3rem slds-m-bottom_small" src="{!$Resource.V2MOMAssets + '/neutral.png'}"/>
+                                                                    <img alt="" class="imgQuarter" src=""/>
+                                                                    <div class="status ">
+                                                                        <img alt="" class="slds-m-bottom_small" src="{!$Resource.Q2_placeholder}" width="44" height="44"/>
+                                                                    </div>
+                                                                    <p class="status"> No Value <br/></p>
+                                                                </aura:set>
+                                                            </aura:if>   
+                                                        </div> 
+                                                    </div>  
+                                                    
+                                                    <div class="slds-p-horizontal slds-medium-size_1-of-4">     
+                                                        <div class="gauge">
+                                                            <aura:if isTrue="{!notequals(m.Q3__c,null)}">
+                                                                <aura:if isTrue="{!lessthanorequal(m.Q3_Target__c,m.Q3__c)}">
+                                                                    <img alt="" class="w3rem slds-m-bottom_small" src="{!$Resource.V2MOMAssets + '/happy.png'}"/>
+                                                                    <aura:set attribute="else">
+                                                                        <img alt="" class="w3rem slds-m-bottom_small" src="{!$Resource.V2MOMAssets + '/sad.png'}"/> 
+                                                                    </aura:set>
+                                                                </aura:if>    
+                                                                <img alt="" class="imgQuarter" src=""/>
+                                                                
+                                                                <div class="status ">
+                                                                    <img alt="" class="slds-m-bottom_small" src="{!$Resource.Q3_placeholder}" width="44" height="44"/>
+                                                                </div>
+                                                                <p class="status"><lightning:formattedNumber value="{!m.Q3_Completion__c}"/>%<br/></p>   
+                                                                <aura:set attribute="else">
+                                                                    <img alt="" class="w3rem slds-m-bottom_small" src="{!$Resource.V2MOMAssets + '/neutral.png'}"/>
+                                                                    <img alt="" class="imgQuarter" src=""/>
+                                                                    <div class="status ">
+                                                                        <img alt="" class="slds-m-bottom_small" src="{!$Resource.Q3_placeholder}" width="44" height="44"/>
+                                                                    </div>
+                                                                    <p class="status"> No Value <br/></p>
+                                                                </aura:set>
+                                                            </aura:if>   
+                                                        </div> 
+                                                    </div>
+                                                    
+                                                    <div class="slds-p-horizontal slds-medium-size_1-of-4">     
+                                                        <div class="gauge">  
+                                                            <aura:if isTrue="{!notequals(m.Q4__c,null)}">
+                                                                <aura:if isTrue="{!lessthanorequal(m.Q4_Target__c,m.Q4__c)}">
+                                                                    <img alt="" class="w3rem slds-m-bottom_small" src="{!$Resource.V2MOMAssets + '/happy.png'}"/>
+                                                                    <aura:set attribute="else">
+                                                                        <img alt="" class="w3rem slds-m-bottom_small" src="{!$Resource.V2MOMAssets + '/sad.png'}"/>
+                                                                    </aura:set>
+                                                                </aura:if>    
+                                                                <img alt="" class="imgQuarter" src=""/>
+                                                                <div class="status ">
+                                                                    <img alt="" class="slds-m-bottom_small" src="{!$Resource.Q4_placeholder}" width="44" height="44"/>
+                                                                </div>
+                                                                <p class="status"><lightning:formattedNumber value="{!m.Q4_Completion__c}"/>%<br/></p>   
+                                                                <aura:set attribute="else">
+                                                                    <img alt="" class="w3rem slds-m-bottom_small" src="{!$Resource.V2MOMAssets + '/neutral.png'}"/>
+                                                                    <img alt="" class="imgQuarter" src=""/>
+                                                                    <div class="status ">
+                                                                        <img alt="" class="slds-m-bottom_small" src="{!$Resource.Q4_placeholder}" width="44" height="44"/>
+                                                                    </div>
+                                                                    <p class="status"> No Value <br/></p>
+                                                                </aura:set>
+                                                            </aura:if>   
+                                                        </div> 
+                                                    </div>
+                                                </div>
+                                            </center>
+                                        </aura:set>
+                                    </aura:if>
+                                    <aura:set attribute="else">
+                                        <aura:if isTrue="{!or(equals(m.Track_Progress_By__c,'Completion Status'), equals(m.Measure__r.Track_Progress_By__c,'Completion Status'))}">
+                                            {!m.Status__c}
+                                            <lightning:progressIndicator currentStep="{!m.Status__c}" type="base" hasError="false" variant="base">
+                                                <lightning:progressStep label="Not Started" value="Not Started"/>
+                                                <lightning:progressStep label="Behind Schedule" value="Behind Schedule"/>
+                                                <lightning:progressStep label="On Hold" value="On Hold"/>
+                                                <lightning:progressStep label="On Track" value="On Track"/>
+                                                <lightning:progressStep label="Completed " value="Completed"/>
+                                            </lightning:progressIndicator>
+                                        </aura:if>
+                                    </aura:set>
+                                </aura:if>
+                            </div>
+                        </lightning:card>
+                    </lightning:layoutItem>
+                </aura:iteration>
+            </lightning:layout>
+        </div>
+    </lightning:card>
+    
+</aura:component>

@@ -1,0 +1,22 @@
+<aura:component implements="force:appHostable,lightning:actionOverride,force:hasRecordId,flexipage:availableForRecordHome,forceCommunity:availableForAllPageTypes" access="global" controller="V2MOM_MobileCtrl">
+	
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="v2momUserId" type="String" />
+    <aura:attribute name="v2momObj" type="V2MOM__c" />
+    <aura:attribute name="managerV2MOMId" type="String"/>
+    <aura:attribute name="v2momOptions" type="List" />
+    <aura:attribute name="selV2MOM" type="String" />
+    <aura:attribute name="currentUserV2MOMId" type="String"/>
+    <aura:attribute name="lastupdatedDate" type="String" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <!--aura:handler event="aura:waiting" action="{!c.showSpinner}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>
+    <center>
+        <lightning:spinner variant="brand" size="medium" aura:id="spinner"/>
+    </center-->
+    
+    {!v.body}
+    
+</aura:component>

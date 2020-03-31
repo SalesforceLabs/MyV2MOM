@@ -1,0 +1,34 @@
+.THIS .slds-popover-desktop {
+	right:0;
+    bottom:1%;
+    position: fixed;
+    border-radius: .25rem;
+    width: 25%;
+    min-height: 2rem;
+    z-index: 6000;
+    background-color: rgb(255, 255, 255);
+    display: inline-block;
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.16);
+    border: 1px solid rgb(217, 219, 221);
+}
+
+.THIS .slds-popover-desktop .chatterCommentList{
+    max-height: 60vh;
+    overflow: auto;
+}
+
+.THIS .commentText{
+    word-wrap: break-word;
+}
+
+.THIS .slds-modal__content{
+    height: 350px;
+}
+
+.THIS .hidePopover{
+    display: none;
+}
+
+.THIS.w100, .THIS .w100{
+    width:100%;
+}

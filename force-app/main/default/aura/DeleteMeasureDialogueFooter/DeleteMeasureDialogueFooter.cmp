@@ -1,0 +1,10 @@
+<aura:component controller="V2MOM_Controller" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="mId" type="String" />
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <aura:registerEvent name="updateView" type="c:Refresh_V2MOM_Home" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <section aura:id="srModal" >
+        <lightning:button name="cancel" label="No" onclick="{!c.handleCancel}"/>
+        <lightning:button name="ok" label="Yes" variant="brand" onclick="{!c.deleteMeasureAction}"/>
+    </section>
+</aura:component>

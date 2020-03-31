@@ -1,0 +1,106 @@
+.THIS {
+    background-color:#ffffff !important;
+}
+.THIS .slds-box{
+    background-color:#f4f6f9 !important;
+}
+.THIS .proimg{
+    border:none;
+}
+.THIS .profname{
+    font-weight: t(fontWeightBold);
+}
+.THIS .profImg{
+    min-width: 64px;
+    max-width: 64px;
+    border-radius:50%;
+}
+.THIS .padTopP75{
+    padding-top: 0.75rem;
+}
+.THIS .padTopP125{
+    padding-top: 1.25rem;
+}
+
+.THIS.c-container{
+    width:100%;
+    background-color:#F9FAF9;
+}
+.THIS .tab{
+      background-color:#F9FAF9;
+}
+
+.THIS .slds-tabs__nav-scroller {
+    width: 100%;
+}
+
+.THIS .slds-col.slds-p-horizontal_medium{
+    width:25%;
+    text-align:center;
+}
+
+.THIS .slds-col.slds-p-horizontal_medium.tabset2{
+    width:33.33%;
+    text-align:center;
+}
+
+
+.THIS.slds-docked-form-footer .slds-tabs_default__item{
+    text-align: center;
+}
+
+.THIS.slds-docked-form-footer .slds-tabs_default__link{
+    line-height: 1.5rem;
+    height: 3rem;
+}
+.THIS.slds-docked-form-footer .slds-tabs_default__content{
+    display: none;
+}
+.THIS.slds-docked-form-footer{
+    padding:0px;
+}
+.THIS .font7{
+    font-size: 0.7rem;
+}
+
+.THIS .w25{
+    width:25%;
+}
+
+.THIS .w33{
+    width:33.33%;
+}
+
+.THIS .btnWidth80{
+    width:80%;
+}
+
+.THIS .imgMargins{
+    width: 60%;
+    margin-left: 32px;
+    margin-top: 32px;
+    margin-bottom: 32px;
+}
+
+.THIS .width30{
+	width: 30%;
+}
+.THIS.footer{
+   position: fixed;
+   left: 0;
+   bottom: 0;
+   width: 100%;
+   background-color: red;
+   color: white;
+   text-align: center;
+}
+.THIS .mAuto{
+    margin: auto;
+}
+.THIS.V2MOMwrapper{
+    height: 100%;
+}
+.THIS .dotBorder{
+    border: 2px solid #dddbda;
+    border-style: dashed;
+}
