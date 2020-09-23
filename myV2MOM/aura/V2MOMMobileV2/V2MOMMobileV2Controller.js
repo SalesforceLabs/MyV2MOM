@@ -7,8 +7,8 @@
             var state = a.getState();
             if (state === "SUCCESS") {
                 var v2momObj = a.getReturnValue();
-                component.set("v.visionAttr", v2momObj.Vision__c);
-                component.set("v.valueAttr", v2momObj.Values__c);
+                component.set("v.visionAttr", v2momObj.myV2MOM__Vision__c);
+                component.set("v.valueAttr", v2momObj.myV2MOM__Values__c);
                 component.set("v.v2momId", v2momObj.Id);
             }else if (state === "INCOMPLETE") {
                 console.log("No response from server or client is offline.");
@@ -45,8 +45,8 @@
             var state = a.getState();
             if (state === "SUCCESS") {
                 var v2momObj = a.getReturnValue();
-                component.set("v.visionAttr", v2momObj.Vision__c);
-                component.set("v.valueAttr", v2momObj.Values__c);
+                component.set("v.visionAttr", v2momObj.myV2MOM__Vision__c);
+                component.set("v.valueAttr", v2momObj.myV2MOM__Values__c);
                 component.set("v.v2momId", v2momObj.Id);
                 component.set("v.v2momUserId", v2momObj.CreatedById);
                 

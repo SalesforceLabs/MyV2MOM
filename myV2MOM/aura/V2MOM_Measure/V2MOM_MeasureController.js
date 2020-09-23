@@ -4,8 +4,8 @@
     },
      checkVal : function(component, event, helper) {
          var flag=false;
-         var validityC = component.get("v.measure.Current_Value__c");
-         var validityT = component.get("v.measure.Target_Value__c");  
+         var validityC = component.get("v.measure.myV2MOM__Current_Value__c");
+         var validityT = component.get("v.measure.myV2MOM__Target_Value__c");  
          if((validityC<0 || validityT<0)){
              flag=true;
          }
@@ -24,7 +24,7 @@
                 var state = res.getState();
                 if(state === 'SUCCESS'){
                     var rVal = res.getReturnValue();
-                    component.set('v.measure.Completion_By_Date__c', rVal);
+                    component.set('v.measure.myV2MOM__Completion_By_Date__c', rVal);
                 }else if(state === 'ERROR'){
                     console.log('An unknown error occured.');
                 }else{
@@ -33,7 +33,7 @@
             });
             $A.enqueueAction(action);
         }else{
-            component.set('v.measure.Completion_By_Date__c', null);
+            component.set('v.measure.myV2MOM__Completion_By_Date__c', null);
         }
         
     },
@@ -49,7 +49,7 @@
     createMeasureMethod: function(component,event,helper){
         if(component.get("v.measure.name") != ""){
             var m = component.get("v.measure");
-            m.Method__c = component.get("v.methodId");
+            m.myV2MOM__Method__c = component.get("v.methodId");
             var action = component.get("c.createMeasure");
             action.setParams({
                 'measure': m
@@ -90,9 +90,9 @@
         var day = currentDate.getDate();
         if (day < 10) day = "0" + day;
         currentDate = year + "-" + month + "-" + day;
-        if(component.get("v.measure.Completion_By_Date__c") < currentDate){
+        if(component.get("v.measure.myV2MOM__Completion_By_Date__c") < currentDate){
             component.set("v.completionDateError","Please select future date");
-            component.set("v.measure.Completion_By_Date__c","");
+            component.set("v.measure.myV2MOM__Completion_By_Date__c","");
         }else{
             component.set("v.completionDateError","");
         }

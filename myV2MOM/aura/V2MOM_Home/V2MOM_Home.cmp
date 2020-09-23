@@ -96,11 +96,11 @@
                                 <aura:if isTrue="{!empty(v.v2momId)}">  
                                     <span class="slds-page-header__title slds-truncate slds-align-middle" style="display: inline-block;" title="Start your V2MOM">Start your V2MOM</span>
                                     <aura:set attribute="else">
-                                        <span class="slds-page-header__title slds-truncate slds-align-middle" style="display: inline-block;" title="V2MOM">FY{!v.myV2mom.FY_Year__c} V2MOM</span>
-                                        <aura:if isTrue="{!  equals(v.myV2mom.Status__c,'Published')}">
-                                            <span class="slds-badge badge-status badge-status-published vertAlign slds-m-left_xx-small"  >{!v.myV2mom.Status__c}</span> 
+                                        <span class="slds-page-header__title slds-truncate slds-align-middle" style="display: inline-block;" title="V2MOM">FY{!v.myV2mom.myV2MOM__FY_Year__c} V2MOM</span>
+                                        <aura:if isTrue="{!  equals(v.myV2mom.myV2MOM__Status__c,'Published')}">
+                                            <span class="slds-badge badge-status badge-status-published vertAlign slds-m-left_xx-small"  >{!v.myV2mom.myV2MOM__Status__c}</span> 
                                             <aura:set attribute="else">
-                                                <span class="slds-badge badge-status vertAlign slds-m-left_xx-small" >{!v.myV2mom.Status__c}</span> 
+                                                <span class="slds-badge badge-status vertAlign slds-m-left_xx-small" >{!v.myV2mom.myV2MOM__Status__c}</span> 
                                             </aura:set>
                                         </aura:if>
                                     </aura:set>
@@ -166,7 +166,7 @@
                             <div class="custom-box">
                                 <dl>
                                     <dt class="slds-form-element__label">Last Published Date</dt>
-                                    <dd><ui:outputDate value="{!v.myV2mom.Published_Date__c}"/></dd>
+                                    <dd><ui:outputDate value="{!v.myV2mom.myV2MOM__Published_Date__c}"/></dd>
                                 </dl>
                             </div>
                         </lightning:layoutItem>
@@ -334,7 +334,7 @@
                                             <lightning:card class="allMnMsCard">
                                                 <aura:set attribute="title">
                                                     <div class="slds-text-heading_small slds-truncate">{!method.Name}</div>
-                                                    <span class="duedate slds-truncate">{!method.Description__c}</span>
+                                                    <span class="duedate slds-truncate">{!method.myV2MOM__Description__c}</span>
                                                 </aura:set>
                                                 <aura:set attribute="actions">
                                                     <aura:if isTrue="{!v.currentUserId == v.v2momUserId}">
@@ -349,12 +349,12 @@
                                                         <lightning:button class="slds-box slds-box_x-small addMeasure slds-m-bottom_x-small" value="{!method.Id}" label="Add Measure" onclick="{!c.openMeasureModal}"/>
                                                     </aura:if>
                                                     <div class="slds-grid slds-wrap">
-                                                        <aura:iteration items="{!method.Measures__r}" var="measure">
+                                                        <aura:iteration items="{!method.myV2MOM__Measures__r}" var="measure">
                                                             <div class="slds-size_1-of-2">
                                                                 <lightning:card class="allMnMsCard mh281 slds-m-around_x-small">
                                                                     <aura:set attribute="title">
                                                                         <div class="slds-text-heading_small slds-truncate">{!measure.Name}</div>
-                                                                        <span class="duedate">Due: <ui:outputDate value="{!measure.Completion_By_Date__c}"/></span>
+                                                                        <span class="duedate">Due: <ui:outputDate value="{!measure.myV2MOM__Completion_By_Date__c}"/></span>
                                                                     </aura:set>
                                                                     <aura:set attribute="actions">
                                                                         <lightning:buttonGroup >
@@ -393,7 +393,7 @@
                                             <lightning:card class="allMnMsCard">
                                                 <aura:set attribute="title">
                                                     <div class="slds-text-heading_small slds-truncate">{!measureTeamWrap.method.Name}</div>
-                                                    <span class="duedate slds-truncate">{!measureTeamWrap.method.Description__c}</span>
+                                                    <span class="duedate slds-truncate">{!measureTeamWrap.method.myV2MOM__Description__c}</span>
                                                 </aura:set>
                                                 <div class="slds-p-horizontal_x-small">
                                                     <div class="slds-grid slds-wrap">
@@ -401,15 +401,15 @@
                                                             <div class="slds-size_1-of-2">
                                                                 <lightning:card class="allMnMsCard slds-m-around_xx-small">
                                                                     <aura:set attribute="title">
-                                                                        <div class="slds-text-heading_small slds-truncate">{!measure.Measure__r.Name}</div>
-                                                                        <span class="duedate">Due: <ui:outputDate value="{!measure.Measure__r.Completion_By_Date__c}"/></span>
+                                                                        <div class="slds-text-heading_small slds-truncate">{!measure.myV2MOM__Measure__r.Name}</div>
+                                                                        <span class="duedate">Due: <ui:outputDate value="{!measure.myV2MOM__Measure__r.myV2MOM__Completion_By_Date__c}"/></span>
                                                                     </aura:set>
                                                                     <aura:set attribute="actions">
                                                                         <lightning:buttonGroup >
                                                                             <aura:if isTrue="{!v.currentUserId == v.v2momUserId}">
                                                                                 <lightning:buttonIcon iconName="utility:priority" name="{!measure.Name}" value="{!measure}" onclick="{!c.viewAssignedMeasureObstaclesAndComments}"/>
                                                                             </aura:if>
-                                                                            <lightning:buttonIcon iconName="utility:chat" name="{!measure.Measure__r.Name}" value="{!measure.Id}" onclick="{!c.showMeasureChatter}"/>
+                                                                            <lightning:buttonIcon iconName="utility:chat" name="{!measure.myV2MOM__Measure__r.Name}" value="{!measure.Id}" onclick="{!c.showMeasureChatter}"/>
                                                                             <aura:if isTrue="{!v.currentUserId == v.v2momUserId}">
                                                                                 <lightning:buttonIcon iconName="utility:edit" value="{!measure}" onclick="{!c.editAssignedMeasure}" />
                                                                             </aura:if>

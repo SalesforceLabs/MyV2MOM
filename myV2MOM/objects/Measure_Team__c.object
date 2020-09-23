@@ -48,6 +48,7 @@
     <enableBulkApi>true</enableBulkApi>
     <enableFeeds>true</enableFeeds>
     <enableHistory>true</enableHistory>
+    <enableLicensing>false</enableLicensing>
     <enableReports>true</enableReports>
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
@@ -207,6 +208,7 @@
         </valueSet>
     </fields>
     <label>Measure Team</label>
+    <language>en_US</language>
     <listViews>
         <fullName>All</fullName>
         <columns>NAME</columns>

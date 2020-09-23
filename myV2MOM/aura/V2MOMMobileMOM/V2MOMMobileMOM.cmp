@@ -55,7 +55,7 @@
         <lightning:tabset >
             <lightning:tab label="My">
                 <aura:iteration items="{!v.myMnM}" var="method">
-                    <c:V2MOMMobileMnM numberOfReportees="{!v.numberOfReportees}" CurrentMethod="{!method}" CurrentMeasures="{!method.Measures__r}" currentUserId="{!v.currentUserId}" v2momUserId="{!v.v2momUserId}" searchString="{!v.searchString}"/>
+                    <c:V2MOMMobileMnM numberOfReportees="{!v.numberOfReportees}" CurrentMethod="{!method}" CurrentMeasures="{!method.myV2MOM__Measures__r}" currentUserId="{!v.currentUserId}" v2momUserId="{!v.v2momUserId}" searchString="{!v.searchString}"/>
                 </aura:iteration>
             </lightning:tab>
             <lightning:tab label="Assigned">

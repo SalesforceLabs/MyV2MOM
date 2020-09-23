@@ -34,7 +34,7 @@
         for(var i=0; i< v2momOpts.length; i++){
             var optObj = {};
             optObj.value = v2momOpts[i].Id;
-            optObj.label = 'FY'+v2momOpts[i].FY_Year__c;
+            optObj.label = 'FY'+v2momOpts[i].myV2MOM__FY_Year__c;
             opts.push(optObj);
         }
         

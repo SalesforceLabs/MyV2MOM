@@ -1,14 +1,8 @@
-/*
- * Copyright (c) 2018, salesforce.com, inc.
- * All rights reserved.
- * SPDX-License-Identifier: BSD-3-Clause
- * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
- */
 /* This class helps in sending a quarterly reminder to fill V2MOM. */
 global class V2MOMQuarterlyReminder implements Schedulable{
 	
     global void execute(SchedulableContext SC) {
-        if(! FLSCheck.isAccessible(MeasureChatterCtrlSharing.getV2MOMFields(), 'V2MOM__c') ){
+        if(! FLSCheck.isAccessible(MeasureChatterCtrlSharing.getV2MOMFields(), 'myV2MOM__V2MOM__c') ){
             return ;
         }
         

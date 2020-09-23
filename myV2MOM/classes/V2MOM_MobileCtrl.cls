@@ -1,19 +1,13 @@
-/*
- * Copyright (c) 2018, salesforce.com, inc.
- * All rights reserved.
- * SPDX-License-Identifier: BSD-3-Clause
- * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
- */
 /* This is a handler class which solves business logic requests from lightning components in mobile. */
 public with sharing class V2MOM_MobileCtrl {
     
     /* This is a wrapper class for displaying methods and its measures both in mobile and desktop. 
     public class MethodAndMeasureWrap{
         @AuraEnabled
-        public Map<Id, Method__c> mtWrap {get; set;}
+        public Map<Id, myV2MOM__Method__c> mtWrap {get; set;}
         @AuraEnabled
         public Map<Id, List<MeasuresWrapper>> mnm {get; set;}
-        public MethodAndMeasureWrap(Map<Id, Method__c> mtWrap, Map<Id, List<MeasuresWrapper>> mnm){
+        public MethodAndMeasureWrap(Map<Id, myV2MOM__Method__c> mtWrap, Map<Id, List<MeasuresWrapper>> mnm){
             this.mtWrap = mtWrap;
             this.mnm = mnm;
         }
@@ -56,7 +50,7 @@ public with sharing class V2MOM_MobileCtrl {
     /* This method helps in saving and updating vision and values. */
     @AuraEnabled
     public static V2MOM__c saveV2V(String visionVal, String valueVal, String v2momIdVal){
-        if(!(FLSCheck.isAccessible(MeasureChatterCtrlSharing.getV2MOMFields(), 'V2MOM__c')  && FLSCheck.isCreateable(MeasureChatterCtrlSharing.getV2MOMFields(), 'V2MOM__c') && FLSCheck.isUpdateable(MeasureChatterCtrlSharing.getV2MOMFields(), 'V2MOM__c'))){
+        if(!(FLSCheck.isAccessible(MeasureChatterCtrlSharing.getV2MOMFields(), 'myV2MOM__V2MOM__c')  && FLSCheck.isCreateable(MeasureChatterCtrlSharing.getV2MOMFields(), 'myV2MOM__V2MOM__c') && FLSCheck.isUpdateable(MeasureChatterCtrlSharing.getV2MOMFields(), 'myV2MOM__V2MOM__c'))){
             return new V2MOM__c();
         }
         
@@ -96,7 +90,7 @@ public with sharing class V2MOM_MobileCtrl {
     /* This method helps in fetching existing vision and values. */
     @AuraEnabled
     public static V2MOM__c fetchV2V(String v2momIdVal){
-        if(! FLSCheck.isAccessible(MeasureChatterCtrlSharing.getV2MOMFields(), 'V2MOM__c') ){
+        if(! FLSCheck.isAccessible(MeasureChatterCtrlSharing.getV2MOMFields(), 'myV2MOM__V2MOM__c') ){
             return new V2MOM__c();
         }
         
@@ -118,7 +112,7 @@ public with sharing class V2MOM_MobileCtrl {
     /* This method helps in fetching existing v2mom rec in the mobile home screen. */
     @AuraEnabled
     public static V2MOMHomeW fetchV2MOMRec(String v2momId){
-        if(! FLSCheck.isAccessible(MeasureChatterCtrlSharing.getV2MOMFields(), 'V2MOM__c') ){
+        if(! FLSCheck.isAccessible(MeasureChatterCtrlSharing.getV2MOMFields(), 'myV2MOM__V2MOM__c') ){
             return new V2MOMHomeW();
         }
         
@@ -209,21 +203,21 @@ public with sharing class V2MOM_MobileCtrl {
     
     /* This method helps in returning manager's vision. */
     @auraEnabled
-    public static String referManagerVisionMob(V2MOM__c V2MOMrec){
+    public static String referManagerVisionMob(myV2MOM__V2MOM__c V2MOMrec){
         System.debug('In Mobile Ctrl::'+V2MOMrec);
         return V2MOM_Controller.referManagerVision(V2MOMrec);
     }
     
     /* This method helps in returning manager's values. */
     @auraEnabled
-    public static String referManagerValueMob(V2MOM__c V2MOMrec){
+    public static String referManagerValueMob(myV2MOM__V2MOM__c V2MOMrec){
         return V2MOM_Controller.referManagerValue(V2MOMrec);
     }
     
     /* This method helps in publishing your V2MOM. */
     @AuraEnabled
     public static V2MOM__c publishV2MOMMob(String v2momIdVal){
-        if(! FLSCheck.isAccessible(MeasureChatterCtrlSharing.getV2MOMFields(), 'V2MOM__c') ){
+        if(! FLSCheck.isAccessible(MeasureChatterCtrlSharing.getV2MOMFields(), 'myV2MOM__V2MOM__c') ){
             return new V2MOM__c();
         }
         

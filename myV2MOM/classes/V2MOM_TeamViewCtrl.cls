@@ -1,9 +1,3 @@
-/*
- * Copyright (c) 2018, salesforce.com, inc.
- * All rights reserved.
- * SPDX-License-Identifier: BSD-3-Clause
- * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
- */
 /* This class holds the business logic for team view in v2mom for both mobile and desktop. */
 public with sharing class V2MOM_TeamViewCtrl {
 
@@ -28,7 +22,7 @@ public with sharing class V2MOM_TeamViewCtrl {
             userMap.put(userObj.id, userObj);
         }
         
-        if(! FLSCheck.isAccessible(MeasureChatterCtrlSharing.getV2MOMFields(), 'V2MOM__c') ){
+        if(! FLSCheck.isAccessible(MeasureChatterCtrlSharing.getV2MOMFields(), 'myV2MOM__V2MOM__c') ){
             return new Map<String, List<UserWrap>>();
         }
         
@@ -39,11 +33,11 @@ public with sharing class V2MOM_TeamViewCtrl {
             v2momUserMap.put(v2momObj.CreatedById, v2momObj);
         }
         
-        if(! FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureFields(), 'Measure__c') ){
+        if(! FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureFields(), 'myV2MOM__Measure__c') ){
             return new Map<String, List<UserWrap>>();
         }
         
-        List<AggregateResult> aggMeasList = [select count(id) statusChecker, CreatedById, Status__c from Measure__c 
+        List<AggregateResult> aggMeasList = [select count(id) statusChecker, CreatedById, Status__c from myV2MOM__Measure__c 
                                              where Method__r.V2MOM__r.FY_Year__c =: currentFiscalYear
                                              AND CreatedById IN: userMap.keySet() Group By CreatedById, Status__c];
 
@@ -57,7 +51,7 @@ public with sharing class V2MOM_TeamViewCtrl {
                 if(userWrapObjTemp.userStatus == 'Needs Attention'){
                     userWrapObjTemp.userStatus = 'Needs Attention';
                 }else{
-                    if(aggRes.get('Status__c') == 'Behind Schedule'){
+                    if(aggRes.get('myV2MOM__Status__c') == 'Behind Schedule'){
                         userWrapObjTemp.userStatus = 'Needs Attention';
                     }else{
                         userWrapObjTemp.userStatus = 'On Track';
@@ -65,7 +59,7 @@ public with sharing class V2MOM_TeamViewCtrl {
                 }
                 userWrapMap.put(userWrapObjTemp.userObj.Id, userWrapObjTemp);
             }else{
-            	if(aggRes.get('Status__c') == 'Behind Schedule'){
+            	if(aggRes.get('myV2MOM__Status__c') == 'Behind Schedule'){
                     userWrapObj.userStatus = 'Needs Attention';
                 }else{
                     userWrapObj.userStatus = 'On Track';
@@ -121,7 +115,7 @@ public with sharing class V2MOM_TeamViewCtrl {
     /* This method with help in redirecting to a v2mom from team view v2mom. */
     @AuraEnabled
     public static String redirectV2MOM(String v2momId, String selUserId){
-        if(! FLSCheck.isAccessible(MeasureChatterCtrlSharing.getV2MOMFields(), 'V2MOM__c') ){
+        if(! FLSCheck.isAccessible(MeasureChatterCtrlSharing.getV2MOMFields(), 'myV2MOM__V2MOM__c') ){
             return '';
         }
         

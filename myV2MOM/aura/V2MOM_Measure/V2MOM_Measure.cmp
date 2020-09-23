@@ -2,25 +2,25 @@
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
     <aura:attribute name="measure" Type="Measure__c" default="{'sobjectType': 'Measure__c',
                                                                        'Name': '',
-                                                                       'Completion_By_Date__c' : '',
-                                                                       'Track_Progress_By__c': 'Numbers Completed',
-                                                                       'Split_By_Quarter__c' : false,
-                                                                       'Status__c' : 'Not Started',
-                                                                       'Target_Value__c':0,
-                                                                       'Current_Value__c':0,
-                                                                       'Q1__c' : 0,
-                                                                       'Q2__c' : 0,
-                                                                       'Q3__c' : 0,
-                                                                       'Q4__c' : 0,
-                                                                       'Q1_Target__c' : 0,
-                                                                       'Q2_Target__c' : 0,
-                                                                       'Q3_Target__c' : 0,
-                                                                       'Q4_Target__c' : 0,
-                                                                       'Obstacles__c' : '',
-                                                                       'Comments__c' : '',
-                                                                       'Priority__c' : 'Medium',
-                                                                       'Measure_Team_Member_Count__c' : 0,
-                                                                       'Assigned_Current_Value__c' : 0}"  access="global"/>
+                                                                       'myV2MOM__Completion_By_Date__c' : '',
+                                                                       'myV2MOM__Track_Progress_By__c': 'Numbers Completed',
+                                                                       'myV2MOM__Split_By_Quarter__c' : false,
+                                                                       'myV2MOM__Status__c' : 'Not Started',
+                                                                       'myV2MOM__Target_Value__c':0,
+                                                                       'myV2MOM__Current_Value__c':0,
+                                                                       'myV2MOM__Q1__c' : 0,
+                                                                       'myV2MOM__Q2__c' : 0,
+                                                                       'myV2MOM__Q3__c' : 0,
+                                                                       'myV2MOM__Q4__c' : 0,
+                                                                       'myV2MOM__Q1_Target__c' : 0,
+                                                                       'myV2MOM__Q2_Target__c' : 0,
+                                                                       'myV2MOM__Q3_Target__c' : 0,
+                                                                       'myV2MOM__Q4_Target__c' : 0,
+                                                                       'myV2MOM__Obstacles__c' : '',
+                                                                       'myV2MOM__Comments__c' : '',
+                                                                       'myV2MOM__Priority__c' : 'Medium',
+                                                                       'myV2MOM__Measure_Team_Member_Count__c' : 0,
+                                                                       'myV2MOM__Assigned_Current_Value__c' : 0}"  access="global"/>
     <aura:attribute name="quarter" Type="String[]" default="— Choose one —,Q1,Q2,Q3,Q4"/>
     <!--<aura:attribute name="progressTypeSelected" type="String" />-->
     <aura:attribute name="prioritySelected" type="String" />
@@ -80,7 +80,7 @@
                             <label class="slds-form-element__label" ><abbr class="slds-required" title="required">*</abbr>Completion Date
                                 <lightning:helptext content="Select a specific date by when you plan to achieve this measure"/>
                             </label>
-                            <ui:inputDate aura:id="dateField" disabled="{! and(!empty(v.selectedQuarter), not(equals(v.selectedQuarter, '— Choose one —')))}" value="{!v.measure.Completion_By_Date__c }" displayDatePicker="true" change="{!c.onDateValueChange}"/>
+                            <ui:inputDate aura:id="dateField" disabled="{! and(!empty(v.selectedQuarter), not(equals(v.selectedQuarter, '— Choose one —')))}" value="{!v.measure.myV2MOM__Completion_By_Date__c }" displayDatePicker="true" change="{!c.onDateValueChange}"/>
                         	<ui:outputText value="{!v.completionDateError}" class="completionDateError"/>
                         </div>
                     </lightning:layoutItem>
@@ -94,20 +94,20 @@
                                               name="progressTypeOption"
                                               label=""
                                               options="{!v.progressTypes}"
-                                              value="{!v.measure.Track_Progress_By__c}"
+                                              value="{!v.measure.myV2MOM__Track_Progress_By__c}"
                                               required="true"
                                               class="legendNone"/>
                     </div>
                 </div>
                 
-                <aura:if isTrue="{!v.measure.Track_Progress_By__c == 'Numbers Completed'}">
+                <aura:if isTrue="{!v.measure.myV2MOM__Track_Progress_By__c == 'Numbers Completed'}">
                     <lightning:layout horizontalAlign="spread">
                         <lightning:layoutItem size="6" padding="around-small">
                             <div class="slds-form-element">
                                 <label class="slds-form-element__label"><abbr class="slds-required" title="required">*</abbr>Target Value
                                     <lightning:helptext content="Target assigned for the measure"/>
                                 </label>
-                                <lightning:input class="textAreaLabel" variant="label-hidden" aura:id="measureTargetValue" name="Target Value" label="Target Value" value="{!v.measure.Target_Value__c}" type="number" min="0" messageWhenRangeUnderflow="Target value can not be a negative" onkeyup="{!c.checkVal}"/>
+                                <lightning:input class="textAreaLabel" variant="label-hidden" aura:id="measureTargetValue" name="Target Value" label="Target Value" value="{!v.measure.myV2MOM__Target_Value__c}" type="number" min="0" messageWhenRangeUnderflow="Target value can not be a negative" onkeyup="{!c.checkVal}"/>
                             </div>
                         </lightning:layoutItem>
                         <lightning:layoutItem size="6" padding="around-small">
@@ -115,19 +115,19 @@
                                 <label class="slds-form-element__label" >Current Value
                                     <lightning:helptext content="Number completed as on today"/>
                                 </label>
-                                 <!--lightning:input class="textAreaLabel" variant="label-hidden" aura:id="measureCurrentValue" name="Current Value" label="Current Value" value="{!v.measure.Current_Value__c}" type="number" min="0" disabled="{!v.measure.Split_By_Quarter__c}" onkeyup="{!c.checkVal}" /-->
-                                <lightning:input class="textAreaLabel" variant="label-hidden" aura:id="measureCurrentValue" name="Current Value" label="Current Value" value="{!v.measure.Current_Value__c}" type="number" min="0" messageWhenRangeUnderflow="Current value can not be a negative" disabled="{!v.measure.Split_By_Quarter__c}" onkeyup="{!c.checkVal}"/>
+                                 <!--lightning:input class="textAreaLabel" variant="label-hidden" aura:id="measureCurrentValue" name="Current Value" label="Current Value" value="{!v.measure.myV2MOM__Current_Value__c}" type="number" min="0" disabled="{!v.measure.myV2MOM__Split_By_Quarter__c}" onkeyup="{!c.checkVal}" /-->
+                                <lightning:input class="textAreaLabel" variant="label-hidden" aura:id="measureCurrentValue" name="Current Value" label="Current Value" value="{!v.measure.myV2MOM__Current_Value__c}" type="number" min="0" messageWhenRangeUnderflow="Current value can not be a negative" disabled="{!v.measure.myV2MOM__Split_By_Quarter__c}" onkeyup="{!c.checkVal}"/>
                             </div>
                         </lightning:layoutItem>
                     </lightning:layout>
                     
-                    <aura:if isTrue="{!greaterthan(v.measure.Measure_Team_Member_Count__c,0)}">
+                    <aura:if isTrue="{!greaterthan(v.measure.myV2MOM__Measure_Team_Member_Count__c,0)}">
                         <lightning:layout horizontalAlign="spread">
                             <lightning:layoutItem size="6" padding="around-small">
                                 <div class="slds-form-element">
                                     <label class="slds-form-element__label">Sum of Assigned Current Values</label>
                                     <div class="slds-form-element__control lineheight1875">
-                                        <lightning:formattedNumber value="{!v.measure.Assigned_Current_Value__c}"/>
+                                        <lightning:formattedNumber value="{!v.measure.myV2MOM__Assigned_Current_Value__c}"/>
                                     </div>
                                 </div>
                             </lightning:layoutItem>
@@ -135,7 +135,7 @@
                                 <div class="slds-form-element">
                                     <label class="slds-form-element__label">Total Current Value</label>
                                     <div class="slds-form-element__control lineheight1875">
-                                        <lightning:formattedNumber value="{!add(v.measure.Assigned_Current_Value__c, v.measure.Current_Value__c)}"/>
+                                        <lightning:formattedNumber value="{!add(v.measure.myV2MOM__Assigned_Current_Value__c, v.measure.myV2MOM__Current_Value__c)}"/>
                                     </div>
                                 </div>
                             </lightning:layoutItem>
@@ -143,14 +143,14 @@
                     </aura:if>   
                     
                     <div class="slds-m-top_x-small">
-                        <c:V2MOM_LinkReportScreen aggValue="{!v.measure.Current_Value__c}"/>
+                        <c:V2MOM_LinkReportScreen aggValue="{!v.measure.myV2MOM__Current_Value__c}"/>
                     </div>
-                    <c:ToggleSplitByQuarter  aura:id="splitByQuarter" completionDate="{!v.measure.Completion_By_Date__c }" isSplit="{!v.measure.Split_By_Quarter__c}" targetValue="{!v.measure.Target_Value__c}" currentValue="{!v.measure.Current_Value__c}" Q1="{!v.measure.Q1__c}" Q2="{!v.measure.Q2__c}" Q3="{!v.measure.Q3__c}" Q4="{!v.measure.Q4__c}" TargetQ1="{!v.measure.Q1_Target__c }" TargetQ2="{!v.measure.Q2_Target__c }" TargetQ3="{!v.measure.Q3_Target__c }" TargetQ4="{!v.measure.Q4_Target__c }"/>
+                    <c:ToggleSplitByQuarter  aura:id="splitByQuarter" completionDate="{!v.measure.myV2MOM__Completion_By_Date__c }" isSplit="{!v.measure.myV2MOM__Split_By_Quarter__c}" targetValue="{!v.measure.myV2MOM__Target_Value__c}" currentValue="{!v.measure.myV2MOM__Current_Value__c}" Q1="{!v.measure.myV2MOM__Q1__c}" Q2="{!v.measure.myV2MOM__Q2__c}" Q3="{!v.measure.myV2MOM__Q3__c}" Q4="{!v.measure.myV2MOM__Q4__c}" TargetQ1="{!v.measure.myV2MOM__Q1_Target__c }" TargetQ2="{!v.measure.myV2MOM__Q2_Target__c }" TargetQ3="{!v.measure.myV2MOM__Q3_Target__c }" TargetQ4="{!v.measure.myV2MOM__Q4_Target__c }"/>
                     
                 </aura:if>
                 
-                <aura:if isTrue="{!v.measure.Track_Progress_By__c == 'Completion Status'}">
-                            <lightning:select class="slds-m-top_x-small" aura:id="selectStatusId" name="selectStatus" label="Status" value="{!v.measure.Status__c}">
+                <aura:if isTrue="{!v.measure.myV2MOM__Track_Progress_By__c == 'Completion Status'}">
+                            <lightning:select class="slds-m-top_x-small" aura:id="selectStatusId" name="selectStatus" label="Status" value="{!v.measure.myV2MOM__Status__c}">
                                 <aura:iteration items="{!v.statusTypes}" var="sType">
                                     <option value="{!sType}" text="{!sType}"></option>
                                 </aura:iteration>
@@ -160,14 +160,14 @@
                     <label class="slds-form-element__label" >Obstacles
                         <lightning:helptext content="Description of the challenges you will have to overcome to achieve your Vision"/>
                     </label>
-                    <lightning:textarea name="obstacles" class="textAreaLabel" variant="label-hidden" value="{!v.measure.Obstacles__c}" label="Obstacles" />
+                    <lightning:textarea name="obstacles" class="textAreaLabel" variant="label-hidden" value="{!v.measure.myV2MOM__Obstacles__c}" label="Obstacles" />
                 </div>
                 
                 <div class="slds-form-element slds-m-top_x-small">
                     <label class="slds-form-element__label">Comments
                         <lightning:helptext content="Express your remarks for this mesasure"/>
                     </label>
-                    <lightning:textarea name="comments" class="textAreaLabel" variant="label-hidden" value="{!v.measure.Comments__c}" label="Comments" />
+                    <lightning:textarea name="comments" class="textAreaLabel" variant="label-hidden" value="{!v.measure.myV2MOM__Comments__c}" label="Comments" />
                 </div>
                 
                 
@@ -175,15 +175,15 @@
                                       name="PriorityOptions"
                                       label="Priority"
                                       options="{!v.priorityTypes}"
-                                      value="{!v.measure.Priority__c}"
+                                      value="{!v.measure.myV2MOM__Priority__c}"
                                       required="true" />
                 
             </div>
             
             <footer class="slds-modal__footer">
                 <lightning:button variant="neutral" label="Cancel" onclick="{!c.closeMeasureModal}"/>
-                <lightning:button variant="brand" label="Save" onclick="{!c.createMeasureMethod}" disabled="{!or(or((or(empty(v.measure.Name), empty(v.measure.Completion_By_Date__c), empty(v.measure.Priority__c))),
-                                                                                                            (equals(v.measure.Track_Progress_By__c, 'Numbers Completed') ? empty(v.measure.Target_Value__c) : false)
+                <lightning:button variant="brand" label="Save" onclick="{!c.createMeasureMethod}" disabled="{!or(or((or(empty(v.measure.Name), empty(v.measure.myV2MOM__Completion_By_Date__c), empty(v.measure.myV2MOM__Priority__c))),
+                                                                                                            (equals(v.measure.myV2MOM__Track_Progress_By__c, 'Numbers Completed') ? empty(v.measure.myV2MOM__Target_Value__c) : false)
                                                                                                             ),v.isNegative)}"/>
             </footer>
         </div>

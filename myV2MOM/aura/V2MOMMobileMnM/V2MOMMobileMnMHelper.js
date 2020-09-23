@@ -13,7 +13,7 @@
             var recId = event.getSource().get('v.value');
             var recName = event.getSource().get('v.name');
             if(isMeasureTeam){
-                recId = recId.Measure__r;
+                recId = recId.myV2MOM__Measure__r;
             }
             measure = {"recId": recId, "recName": recName};
         }

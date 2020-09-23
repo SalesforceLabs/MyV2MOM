@@ -22,7 +22,7 @@
         var toShow = [];
         if(!$A.util.isUndefinedOrNull(srchString)){
             for(var i=0; i<CurrentMeasures.length; i++){
-                var mName = !isMeasureTeam ? CurrentMeasures[i].Name : CurrentMeasures[i].Measure__r.Name;
+                var mName = !isMeasureTeam ? CurrentMeasures[i].Name : CurrentMeasures[i].myV2MOM__Measure__r.Name;
                 if(mName.toLowerCase().includes(srchString)){
                     toShow.push(i);
                 }

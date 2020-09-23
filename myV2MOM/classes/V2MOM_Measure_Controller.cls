@@ -1,9 +1,3 @@
-/*
- * Copyright (c) 2018, salesforce.com, inc.
- * All rights reserved.
- * SPDX-License-Identifier: BSD-3-Clause
- * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
- */
 public with sharing class V2MOM_Measure_Controller {
     
     @AuraEnabled
@@ -18,22 +12,22 @@ public with sharing class V2MOM_Measure_Controller {
     
     @auraEnabled
     //Method to create a Measure
-    public static void createMeasure(Measure__c measure){
-        if(measure.Priority__c == 'H'){
-            measure.Priority__c = 'High';
-        }else if(measure.Priority__c == 'M'){
-            measure.Priority__c = 'Medium';
-        }else if(measure.Priority__c == 'L'){
-            measure.Priority__c = 'Low';
+    public static void createMeasure(myV2MOM__Measure__c measure){
+        if(measure.myV2MOM__Priority__c == 'H'){
+            measure.myV2MOM__Priority__c = 'High';
+        }else if(measure.myV2MOM__Priority__c == 'M'){
+            measure.myV2MOM__Priority__c = 'Medium';
+        }else if(measure.myV2MOM__Priority__c == 'L'){
+            measure.myV2MOM__Priority__c = 'Low';
         }
         
-        if(measure.Track_Progress_By__c == 'N'){
-            measure.Track_Progress_By__c = 'Numbers Completed';
-        }else if(measure.Track_Progress_By__c == 'C'){
-            measure.Track_Progress_By__c = 'Completion Status';
+        if(measure.myV2MOM__Track_Progress_By__c == 'N'){
+            measure.myV2MOM__Track_Progress_By__c = 'Numbers Completed';
+        }else if(measure.myV2MOM__Track_Progress_By__c == 'C'){
+            measure.myV2MOM__Track_Progress_By__c = 'Completion Status';
         }
         List<String> measFields = MeasureChatterCtrlSharing.getMeasureFields();
-        if(FLSCheck.isAccessible(measFields,'Measure__c') && FLSCheck.isCreateable(measFields,'Measure__c') && FLSCheck.isUpdateable(measFields,'Measure__c')){
+        if(FLSCheck.isAccessible(measFields,'myV2MOM__Measure__c') && FLSCheck.isCreateable(measFields,'myV2MOM__Measure__c') && FLSCheck.isUpdateable(measFields,'myV2MOM__Measure__c')){
             upsert measure; 
         }
         
@@ -54,8 +48,8 @@ public with sharing class V2MOM_Measure_Controller {
     //get all available progress type values
     public static List<V2MOM_UtilCls.labelValueWrap> getProgressTypesMobile(){
         List<V2MOM_UtilCls.labelValueWrap> options = new List<V2MOM_UtilCls.labelValueWrap>();
-        if(FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureFields(),'Measure__c')){
-            Schema.DescribeFieldResult fieldResult = Measure__c.Track_Progress_By__c.getDescribe();
+        if(FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureFields(),'myV2MOM__Measure__c')){
+            Schema.DescribeFieldResult fieldResult = myV2MOM__Measure__c.myV2MOM__Track_Progress_By__c.getDescribe();
             List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
             for (Schema.PicklistEntry f: ple) {
                 options.add(new V2MOM_UtilCls.labelValueWrap(f.getLabel(), f.getValue()));
@@ -64,11 +58,11 @@ public with sharing class V2MOM_Measure_Controller {
         return options;
     }
     @AuraEnabled
-    //Method to return available priority types from Priority__c field on Measure__c object
+    //Method to return available priority types from myV2MOM__Priority__c field on myV2MOM__Measure__c object
     public static List<V2MOM_UtilCls.labelValueWrap> getPriorityTypesMobile(){
         List<V2MOM_UtilCls.labelValueWrap> options = new List<V2MOM_UtilCls.labelValueWrap>();
-        if(FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureFields(),'Measure__c')){
-            Schema.DescribeFieldResult fieldResult = Measure__c.Priority__c.getDescribe();
+        if(FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureFields(),'myV2MOM__Measure__c')){
+            Schema.DescribeFieldResult fieldResult = myV2MOM__Measure__c.myV2MOM__Priority__c.getDescribe();
             List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
             for (Schema.PicklistEntry f: ple) {
                 options.add(new V2MOM_UtilCls.labelValueWrap(f.getLabel(), f.getValue()));
@@ -78,11 +72,11 @@ public with sharing class V2MOM_Measure_Controller {
     }
     
     @AuraEnabled
-    //Method to return available status types from Status__c field on Measure__c object
+    //Method to return available status types from myV2MOM__Status__c field on myV2MOM__Measure__c object
     public static List<V2MOM_UtilCls.labelValueWrap> getStatusTypesMobile(){
         List<V2MOM_UtilCls.labelValueWrap> options = new List<V2MOM_UtilCls.labelValueWrap>();
-        if(FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureFields(),'Measure__c')){
-            Schema.DescribeFieldResult fieldResult = Measure__c.Status__c.getDescribe();
+        if(FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureFields(),'myV2MOM__Measure__c')){
+            Schema.DescribeFieldResult fieldResult = myV2MOM__Measure__c.myV2MOM__Status__c.getDescribe();
             List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
             for (Schema.PicklistEntry f: ple) {
                 options.add(new V2MOM_UtilCls.labelValueWrap(f.getLabel(), f.getValue()));
@@ -96,8 +90,8 @@ public with sharing class V2MOM_Measure_Controller {
     //get all available progress type values
     public static List<String> getProgressTypes(){
         List<String> options = new List<String>();
-        if(FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureFields(),'Measure__c')){
-            Schema.DescribeFieldResult fieldResult = Measure__c.Track_Progress_By__c.getDescribe();
+        if(FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureFields(),'myV2MOM__Measure__c')){
+            Schema.DescribeFieldResult fieldResult = myV2MOM__Measure__c.myV2MOM__Track_Progress_By__c.getDescribe();
             List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
             for (Schema.PicklistEntry f: ple) {
                 options.add(f.getLabel());
@@ -106,11 +100,11 @@ public with sharing class V2MOM_Measure_Controller {
         return options;
     }
     @AuraEnabled
-    //Method to return available priority types from Priority__c field on Measure__c object
+    //Method to return available priority types from myV2MOM__Priority__c field on myV2MOM__Measure__c object
     public static List<String> getPriorityTypes(){
         List<String> options = new List<String>();
-        if(FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureFields(),'Measure__c')){
-            Schema.DescribeFieldResult fieldResult = Measure__c.Priority__c.getDescribe();
+        if(FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureFields(),'myV2MOM__Measure__c')){
+            Schema.DescribeFieldResult fieldResult = myV2MOM__Measure__c.myV2MOM__Priority__c.getDescribe();
             List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
             for (Schema.PicklistEntry f: ple) {
                 options.add(f.getLabel());
@@ -120,11 +114,11 @@ public with sharing class V2MOM_Measure_Controller {
     }
     
     @AuraEnabled
-    //Method to return available status types from Priority__c field on Measure__c object
+    //Method to return available status types from myV2MOM__Priority__c field on myV2MOM__Measure__c object
     public static List<String> getStatusTypes(){
         List<String> options = new List<String>();
-        if(FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureFields(),'Measure__c')){
-            Schema.DescribeFieldResult fieldResult = Measure__c.Status__c.getDescribe();
+        if(FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureFields(),'myV2MOM__Measure__c')){
+            Schema.DescribeFieldResult fieldResult = myV2MOM__Measure__c.myV2MOM__Status__c.getDescribe();
             List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
             for (Schema.PicklistEntry f: ple) {
                 options.add(f.getLabel());
@@ -134,13 +128,13 @@ public with sharing class V2MOM_Measure_Controller {
     }
     @AuraEnabled
     //Method to return available details on a measure based on the measure id passed
-    public static Measure__c getMeasureDetails(String measId){
+    public static myV2MOM__Measure__c getMeasureDetails(String measId){
         List<String> measFields = MeasureChatterCtrlSharing.getMeasureFields();
-        if(!FLSCheck.isAccessible(measFields,'Measure__c')){
-            Measure__c measure = new Measure__c();
+        if(!FLSCheck.isAccessible(measFields,'myV2MOM__Measure__c')){
+            myV2MOM__Measure__c measure = new myV2MOM__Measure__c();
             return measure;
         }
-        Measure__c meas = [SELECT Id, Name, Track_Progress_By__c, Priority__c, Status__c, Method__c, Target_Value__c, Current_Value__c, Split_By_Quarter__c, Completion_By_Date__c, Completion_By_Quarter__c, Q1__c, Q2__c, Q3__c, Q4__c, Q1_Target__c, Q2_Target__c, Q3_Target__c, Q4_Target__c, Comments__c, Obstacles__c FROM Measure__c WHERE Id =: measId];
+        myV2MOM__Measure__c meas = [SELECT Id, Name, myV2MOM__Track_Progress_By__c, myV2MOM__Priority__c, myV2MOM__Status__c, myV2MOM__Method__c, myV2MOM__Target_Value__c, myV2MOM__Current_Value__c, myV2MOM__Split_By_Quarter__c, myV2MOM__Completion_By_Date__c, myV2MOM__Completion_By_Quarter__c, myV2MOM__Q1__c, myV2MOM__Q2__c, myV2MOM__Q3__c, myV2MOM__Q4__c, myV2MOM__Q1_Target__c, myV2MOM__Q2_Target__c, myV2MOM__Q3_Target__c, myV2MOM__Q4_Target__c, myV2MOM__Comments__c, myV2MOM__Obstacles__c FROM myV2MOM__Measure__c WHERE Id =: measId];
         return meas;
     }
     

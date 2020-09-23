@@ -47,9 +47,9 @@
         var params = event.getParam('arguments');
         component.set('v.currentMeasureName', params.measureName);
         component.set('v.currentMeasureId', params.measureId.Id);
-        component.set('v.currentMeasureTarget', params.measureId.Target_Value__c);
-        component.set('v.measureTotalCurrVal', params.measureId.Assigned_Current_Value__c);
-        component.set('v.measureTrackProgress', params.measureId.Track_Progress_By__c);
+        component.set('v.currentMeasureTarget', params.measureId.myV2MOM__Target_Value__c);
+        component.set('v.measureTotalCurrVal', params.measureId.myV2MOM__Assigned_Current_Value__c);
+        component.set('v.measureTrackProgress', params.measureId.myV2MOM__Track_Progress_By__c);
         
         var action = component.get('c.getMeasureAssignees');
         action.setParams({
@@ -65,8 +65,8 @@
                     var userLstStr = [];
                     var meaTeamStr = '';
                     for(var i=0; i<rvalLen; i++){
-                        userLstStr.push(rVal[i].Member__c);
-                        meaTeamStr += rVal[i].Member__c +';';
+                        userLstStr.push(rVal[i].myV2MOM__Member__c);
+                        meaTeamStr += rVal[i].myV2MOM__Member__c +';';
                     }
                     component.set('v.existingMeasureList', rVal);
                     userLstStr = userLstStr.join(';');
