@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2018, salesforce.com, inc.
+ * All rights reserved.
+ * SPDX-License-Identifier: BSD-3-Clause
+ * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
 /* This class holds the business logic for chatter actions on a measure and measure team records. */
 public with sharing class MeasureChatterCtrl {
     
@@ -6,18 +12,18 @@ public with sharing class MeasureChatterCtrl {
     public static List<WrapperCommentFeeds> getCurrentMeasureFeed(String measureId){
         String sObjectApi = String.valueOf(Id.valueOf(measureId).getsobjecttype());
         String sQuery;
-        List<myV2MOM__Measure__c> lstMeasure = new List<myV2MOM__Measure__c>();
-        List<myV2MOM__Measure_Team__c> lstMeasureTeam = new List<myV2MOM__Measure_Team__c>();
+        List<Measure__c> lstMeasure = new List<Measure__c>();
+        List<Measure_Team__c> lstMeasureTeam = new List<Measure_Team__c>();
         
-        if(! (FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureFields(), 'myV2MOM__Measure__c') && FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureTeamFields(), 'myV2MOM__Measure_Team__c')) ){
+        if(! (FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureFields(), 'Measure__c') && FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureTeamFields(), 'Measure_Team__c')) ){
             return new List<WrapperCommentFeeds>();
         }
        
-        if(sObjectApi == 'myV2MOM__Measure__c'){
-            sQuery = 'SELECT myV2MOM__MeasureChatFeedId__c FROM myV2MOM__Measure__c WHERE Id=:measureId LIMIT 1';
+        if(sObjectApi == 'Measure__c'){
+            sQuery = 'SELECT MeasureChatFeedId__c FROM Measure__c WHERE Id=:measureId LIMIT 1';
             lstMeasure = Database.query(sQuery);
         }else{
-            sQuery = 'SELECT myV2MOM__MeasureTeamChatFeedId__c FROM myV2MOM__Measure_Team__c WHERE Id=:measureId LIMIT 1';
+            sQuery = 'SELECT MeasureTeamChatFeedId__c FROM Measure_Team__c WHERE Id=:measureId LIMIT 1';
         	lstMeasureTeam = Database.query(sQuery);
             system.debug('lstMeasureTeam::'+lstMeasureTeam);
         }
@@ -25,7 +31,7 @@ public with sharing class MeasureChatterCtrl {
         List<Measure__Feed> lstMeasureFeed = new List<Measure__Feed>();
         List<Measure_Team__Feed> lstMeasureTeamFeed = new List<Measure_Team__Feed>();
         
-        if(lstMeasure != null && lstMeasure.size() > 0 && lstMeasure[0].myV2MOM__MeasureChatFeedId__c != null){
+        if(lstMeasure != null && lstMeasure.size() > 0 && lstMeasure[0].MeasureChatFeedId__c != null){
         	lstMeasureFeed =  [SELECT Id, Type,  CreatedById, 
                                               CreatedBy.FirstName, CreatedBy.LastName,
                                               CreatedBy.Name,
@@ -45,7 +51,7 @@ public with sharing class MeasureChatterCtrl {
         System.debug('lstMeasureFeed::'+lstMeasureFeed);
         
         //recent changes
-        if(lstMeasureTeam != null && lstMeasureTeam.size() > 0 && lstMeasureTeam[0].myV2MOM__MeasureTeamChatFeedId__c != null){
+        if(lstMeasureTeam != null && lstMeasureTeam.size() > 0 && lstMeasureTeam[0].MeasureTeamChatFeedId__c != null){
             lstMeasureTeamFeed = [SELECT Id, Type,  CreatedById, 
                                               CreatedBy.FirstName, CreatedBy.LastName,
                                               CreatedBy.Name,
@@ -144,32 +150,32 @@ public with sharing class MeasureChatterCtrl {
     /* Thi method helps in creating a feed comment. */
     @AuraEnabled
     public static void createMeasureFeedComment(String sRecordId, String sPost){
-        if(! (FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureFields(), 'myV2MOM__Measure__c') && FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureTeamFields(), 'myV2MOM__Measure_Team__c'))){
+        if(! (FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureFields(), 'Measure__c') && FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureTeamFields(), 'Measure_Team__c'))){
             return ;
         }
         
         system.debug('sRecordId::'+sRecordId);
         String sObjectApi = String.valueOf(Id.valueOf(sRecordId).getsobjecttype());
-        List<myV2MOM__Measure__c> lstMeasure = new List<myV2MOM__Measure__c>();
-        List<myV2MOM__Measure_Team__c> lstMeasureTeam = new List<myV2MOM__Measure_Team__c>();
+        List<Measure__c> lstMeasure = new List<Measure__c>();
+        List<Measure_Team__c> lstMeasureTeam = new List<Measure_Team__c>();
         String sQuery;
-        if(sObjectApi == 'myV2MOM__Measure__c'){
-            sQuery = 'SELECT myV2MOM__MeasureChatFeedId__c FROM myV2MOM__Measure__c WHERE Id=:sRecordId LIMIT 1';
+        if(sObjectApi == 'Measure__c'){
+            sQuery = 'SELECT MeasureChatFeedId__c FROM Measure__c WHERE Id=:sRecordId LIMIT 1';
             lstMeasure = Database.query(sQuery);
         }else{
-            sQuery = 'SELECT myV2MOM__MeasureTeamChatFeedId__c FROM myV2MOM__Measure_Team__c WHERE Id=:sRecordId LIMIT 1';
+            sQuery = 'SELECT MeasureTeamChatFeedId__c FROM Measure_Team__c WHERE Id=:sRecordId LIMIT 1';
             lstMeasureTeam = Database.query(sQuery);
         }
         
-        if(sObjectApi == 'myV2MOM__Measure__c' && !String.isEmpty(lstMeasure[0].myV2MOM__MeasureChatFeedId__c)){
+        if(sObjectApi == 'Measure__c' && !String.isEmpty(lstMeasure[0].MeasureChatFeedId__c)){
             FeedComment objPost = new FeedComment();
-            objPost.FeedItemId = lstMeasure[0].myV2MOM__MeasureChatFeedId__c;
+            objPost.FeedItemId = lstMeasure[0].MeasureChatFeedId__c;
             objPost.CommentBody = sPost;
             insert objPost;
             system.debug('Measure Post::'+objPost.Id);
-        }else if(sObjectApi == 'myV2MOM__Measure_Team__c' && !String.isEmpty(lstMeasureTeam[0].myV2MOM__MeasureTeamChatFeedId__c)){
+        }else if(sObjectApi == 'Measure_Team__c' && !String.isEmpty(lstMeasureTeam[0].MeasureTeamChatFeedId__c)){
             FeedComment objPost = new FeedComment();
-            objPost.FeedItemId = lstMeasureTeam[0].myV2MOM__MeasureTeamChatFeedId__c;
+            objPost.FeedItemId = lstMeasureTeam[0].MeasureTeamChatFeedId__c;
             objPost.CommentBody = sPost;
             insert objPost;
             system.debug('Measure Team Post::'+objPost.Id);
@@ -179,8 +185,8 @@ public with sharing class MeasureChatterCtrl {
             objFirstFeed.Body = sPost;
              
             
-            if(sObjectApi == 'myV2MOM__Measure__c'){
-                if(! FLSCheck.isUpdateable(MeasureChatterCtrlSharing.getMeasureFields(), 'myV2MOM__Measure__c') ){
+            if(sObjectApi == 'Measure__c'){
+                if(! FLSCheck.isUpdateable(MeasureChatterCtrlSharing.getMeasureFields(), 'Measure__c') ){
                     return ;
                 }
                 
@@ -190,15 +196,15 @@ public with sharing class MeasureChatterCtrl {
                 
                 insert objFirstFeed;
                 system.debug('firstPost::'+objFirstFeed.Id);
-                lstMeasure[0].myV2MOM__MeasureChatFeedId__c = objFirstFeed.Id;
+                lstMeasure[0].MeasureChatFeedId__c = objFirstFeed.Id;
                 update lstMeasure;
             }else{
-                if(! FLSCheck.isUpdateable(MeasureChatterCtrlSharing.getMeasureTeamFields(), 'myV2MOM__Measure_Team__c') ){
+                if(! FLSCheck.isUpdateable(MeasureChatterCtrlSharing.getMeasureTeamFields(), 'Measure_Team__c') ){
                     return ;
                 }
                 
                 insert objFirstFeed;
-                lstMeasureTeam[0].myV2MOM__MeasureTeamChatFeedId__c = objFirstFeed.Id;
+                lstMeasureTeam[0].MeasureTeamChatFeedId__c = objFirstFeed.Id;
                 update lstMeasureTeam;
             }
         }

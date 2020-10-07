@@ -68,7 +68,6 @@
     <enableBulkApi>true</enableBulkApi>
     <enableFeeds>true</enableFeeds>
     <enableHistory>true</enableHistory>
-    <enableLicensing>false</enableLicensing>
     <enableReports>true</enableReports>
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
@@ -163,7 +162,6 @@
         <visibleLines>3</visibleLines>
     </fields>
     <label>V2MOM</label>
-    <language>en_US</language>
     <listViews>
         <fullName>All</fullName>
         <columns>NAME</columns>

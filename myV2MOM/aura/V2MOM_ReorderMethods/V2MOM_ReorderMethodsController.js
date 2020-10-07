@@ -8,9 +8,9 @@
             for(var i=0;i<methodLis.length;i++){
                 var method = {};
                 var liDataset = methodLis[i].dataset;
-                method.sObjectType = 'myV2MOM__Method__c';
+                method.sObjectType = 'Method__c';
                 method.Id = liDataset.recid;
-                method.myV2MOM__Order__c = i;
+                method.Order__c = i;
                 method.Name = liDataset.recname;
                 methodsTobeUpdated.push(method);
             }

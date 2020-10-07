@@ -1,14 +1,20 @@
+/*
+ * Copyright (c) 2018, salesforce.com, inc.
+ * All rights reserved.
+ * SPDX-License-Identifier: BSD-3-Clause
+ * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
 public with sharing class V2MOM_Controller { 
     
     @AuraEnabled
     //Method to update shared measure record
-    public static void updateAssignedMeasure(myV2MOM__Measure_Team__c mtRecord){
+    public static void updateAssignedMeasure(Measure_Team__c mtRecord){
         try{
             List<String> userShareList = new List<String>();
             userShareList.add(UserInfo.getUserId());
             MeasureChatterCtrlSharing.shareMeasureManually(mtRecord.Measure__c, userShareList);
             List<String> mtFields = MeasureChatterCtrlSharing.getMeasureTeamFields();
-            if(FLSCheck.isAccessible(mtFields,'myV2MOM__Measure_Team__c') && FLSCheck.isCreateable(mtFields,'myV2MOM__Measure_Team__c') && FLSCheck.isUpdateable(mtFields,'myV2MOM__Measure_Team__c')){
+            if(FLSCheck.isAccessible(mtFields,'Measure_Team__c') && FLSCheck.isCreateable(mtFields,'Measure_Team__c') && FLSCheck.isUpdateable(mtFields,'Measure_Team__c')){
                 upsert mtRecord; 
             }            
         }catch(exception e){
@@ -23,7 +29,7 @@ public with sharing class V2MOM_Controller {
         String uName = V2MOM_Controller.getUserName();
         String usId = UserInfo.getUserId();
         /*Fetch V2MOM Record and Manager V2MOM Id*/
-        myV2MOM__V2MOM__c v2momRec;
+        V2MOM__c v2momRec;
         V2MOM_UtilCls.newMethodAndMeasureWrap allMnMs;
         List<V2MOM__c> v2momObjOptList = new List<V2MOM__c>();
         
@@ -32,24 +38,24 @@ public with sharing class V2MOM_Controller {
 		
         if(v2MOMId == null || v2MOMId == ''){
             String currentFiscalYear = [SELECT FiscalYearSettings.Name FROM Period WHERE Type = 'Year' AND StartDate <= TODAY AND EndDate >= TODAY].FiscalYearSettings.Name;
-            v2momRec = new myV2MOM__V2MOM__c();
-            List<myV2MOM__Method__c> myMnM = new List<myV2MOM__Method__c>();
+            v2momRec = new V2MOM__c();
+            List<Method__c> myMnM = new List<Method__c>();
             List<V2MOM_UtilCls.recListWrap> assignedMnM = new List<V2MOM_UtilCls.recListWrap>();
             List<V2MOM_UtilCls.recListWrap> adoptedMnM = new List<V2MOM_UtilCls.recListWrap>();
             allMnMs = new V2MOM_UtilCls.newMethodAndMeasureWrap(myMnM, assignedMnM, adoptedMnM);
             List<String> v2momFields = MeasureChatterCtrlSharing.getV2MOMFields();
-            if(!FLSCheck.isAccessible(v2momFields,'myV2MOM__V2MOM__c')){
+            if(!FLSCheck.isAccessible(v2momFields,'V2MOM__c')){
                 return null;
             }
             v2momObjOptList = [select Id, FY_Year__c from V2MOM__c where CreatedById =: UserInfo.getUserId()
                                order by CreatedDate DESC];
         }else{
             List<String> v2momFields = MeasureChatterCtrlSharing.getV2MOMFields();
-            if(!FLSCheck.isAccessible(v2momFields,'myV2MOM__V2MOM__c')){
+            if(!FLSCheck.isAccessible(v2momFields,'V2MOM__c')){
                 return null;
             }
-            v2momRec = [SELECT Id, myV2MOM__Vision__c, myV2MOM__Values__c, CreatedById, CreatedBy.Name,  myV2MOM__FY_Year__c, myV2MOM__Status__c, myV2MOM__Published_Date__c
-                        from myV2MOM__V2MOM__c WHERE id =: v2MOMId];
+            v2momRec = [SELECT Id, Vision__c, Values__c, CreatedById, CreatedBy.Name,  FY_Year__c, Status__c, Published_Date__c
+                        from V2MOM__c WHERE id =: v2MOMId];
             allMnMs= V2MOM_UtilCls.getMnMNew(v2MOMId);
             v2momObjOptList = [select Id, FY_Year__c from V2MOM__c where CreatedById =: v2momRec.CreatedById
                                order by CreatedDate DESC];
@@ -83,31 +89,31 @@ public with sharing class V2MOM_Controller {
     }
     */
     @auraEnabled
-    public static myV2MOM__V2MOM__c getMyV2MOM(String v2MOMId){
+    public static V2MOM__c getMyV2MOM(String v2MOMId){
         List<String> v2momFields = MeasureChatterCtrlSharing.getV2MOMFields();
         
-        myV2MOM__V2MOM__c vm;
+        V2MOM__c vm;
         if(v2MOMId == null || v2MOMId == ''){
             String usId = UserInfo.getUserId();
             String currentFiscalYear = [SELECT FiscalYearSettings.Name FROM Period WHERE Type = 'Year' AND StartDate <= TODAY AND EndDate >= TODAY].FiscalYearSettings.Name;
             
-            if(!FLSCheck.isAccessible(v2momFields,'myV2MOM__V2MOM__c')){
+            if(!FLSCheck.isAccessible(v2momFields,'V2MOM__c')){
                 return null;
             }
-            vm = [SELECT Id, myV2MOM__Vision__c, myV2MOM__Values__c, CreatedById, CreatedBy.Name ,  myV2MOM__FY_Year__c, myV2MOM__Status__c  from myV2MOM__V2MOM__c WHERE CreatedById =: usId AND myV2MOM__FY_Year__c =: currentFiscalYear];
+            vm = [SELECT Id, Vision__c, Values__c, CreatedById, CreatedBy.Name ,  FY_Year__c, Status__c  from V2MOM__c WHERE CreatedById =: usId AND FY_Year__c =: currentFiscalYear];
         }else{
             
-            if(!FLSCheck.isAccessible(v2momFields,'myV2MOM__V2MOM__c')){
+            if(!FLSCheck.isAccessible(v2momFields,'V2MOM__c')){
                 return null;
             }
-            vm = [SELECT Id, myV2MOM__Vision__c, myV2MOM__Values__c, CreatedById, CreatedBy.Name,  myV2MOM__FY_Year__c, myV2MOM__Status__c  from myV2MOM__V2MOM__c WHERE id =: v2MOMId];
+            vm = [SELECT Id, Vision__c, Values__c, CreatedById, CreatedBy.Name,  FY_Year__c, Status__c  from V2MOM__c WHERE id =: v2MOMId];
         }
         User usr = [Select Id, ManagerId from User where Id =: vm.CreatedById];
         if(usr.ManagerId != null && usr.ManagerId != ''){
-            if(!FLSCheck.isAccessible(v2momFields,'myV2MOM__V2MOM__c')){
+            if(!FLSCheck.isAccessible(v2momFields,'V2MOM__c')){
                 return null;
             }
-            myV2MOM__V2MOM__c managerV2MOM = [Select Id from myV2MOM__V2MOM__c where CreatedById =: usr.ManagerId order by createddate desc limit 1];
+            V2MOM__c managerV2MOM = [Select Id from V2MOM__c where CreatedById =: usr.ManagerId order by createddate desc limit 1];
         }
         return vm;
     }
@@ -126,18 +132,18 @@ public with sharing class V2MOM_Controller {
     
     @auraEnabled
     //Method to create a new Method on the V2MOM
-    public static List<myV2MOM__Method__c> createMethod(myV2MOM__Method__c method, String v2MOMId){
-        myV2MOM__Method__c md = new myV2MOM__Method__c();
+    public static List<Method__c> createMethod(Method__c method, String v2MOMId){
+        Method__c md = new Method__c();
         md = method;
-        md.myV2MOM__V2MOM__c = v2MOMId;
+        md.V2MOM__c = v2MOMId;
         List<String> mtFields = MeasureChatterCtrlSharing.getMethodFields();
-        if(FLSCheck.isAccessible(mtFields,'myV2MOM__Method__c') && FLSCheck.isCreateable(mtFields,'myV2MOM__Method__c') && FLSCheck.isUpdateable(mtFields,'myV2MOM__Method__c')){
+        if(FLSCheck.isAccessible(mtFields,'Method__c') && FLSCheck.isCreateable(mtFields,'Method__c') && FLSCheck.isUpdateable(mtFields,'Method__c')){
             upsert md; 
         }
-        if(!FLSCheck.isAccessible(mtFields,'myV2MOM__Method__c')){
-            return new List<myV2MOM__Method__c>();
+        if(!FLSCheck.isAccessible(mtFields,'Method__c')){
+            return new List<Method__c>();
         }
-        return [SELECT Id, Name, myV2MOM__V2MOM__c, myV2MOM__Description__c FROM myV2MOM__Method__c WHERE myV2MOM__V2MOM__c =: v2MOMId];
+        return [SELECT Id, Name, V2MOM__c, Description__c FROM Method__c WHERE V2MOM__c =: v2MOMId];
     }
     
     @AuraEnabled
@@ -148,28 +154,28 @@ public with sharing class V2MOM_Controller {
     
     @auraEnabled
     //Copy Manger's Vision
-    public static String referManagerVision(myV2MOM__V2MOM__c V2MOMrec){
+    public static String referManagerVision(V2MOM__c V2MOMrec){
         
         System.debug('V2MoM:::'+V2MOMrec);
         string managerId =  [Select Id, ManagerId FROM User WHERE Id = :UserInfo.getUserId()].ManagerId;
         String currentFiscalYear = [SELECT FiscalYearSettings.Name FROM Period WHERE Type = 'Year' AND StartDate <= TODAY AND EndDate >= TODAY].FiscalYearSettings.Name;
         
         List<String> v2momFields = MeasureChatterCtrlSharing.getV2MOMFields();
-        if(!FLSCheck.isAccessible(v2momFields,'myV2MOM__V2MOM__c')){
+        if(!FLSCheck.isAccessible(v2momFields,'V2MOM__c')){
             return '';
         }
-        List <myV2MOM__V2MOM__c> v2momList=new  List <myV2MOM__V2MOM__c>();
+        List <V2MOM__c> v2momList=new  List <V2MOM__c>();
         System.debug('V2MOM::'+V2MOMrec);
         if(V2MOMrec!=null && V2MOMrec.Id!=null ){
-            v2momList = [SELECT Id, myV2MOM__Vision__c from myV2MOM__V2MOM__c WHERE 
-                         CreatedById =: managerId AND myV2MOM__FY_Year__c =: V2MOMrec.myV2MOM__FY_Year__c];
+            v2momList = [SELECT Id, Vision__c from V2MOM__c WHERE 
+                         CreatedById =: managerId AND FY_Year__c =: V2MOMrec.FY_Year__c];
         }else{
-            v2momList = [SELECT Id, myV2MOM__Vision__c from myV2MOM__V2MOM__c WHERE 
-                         CreatedById =: managerId AND myV2MOM__FY_Year__c =: currentFiscalYear];
+            v2momList = [SELECT Id, Vision__c from V2MOM__c WHERE 
+                         CreatedById =: managerId AND FY_Year__c =: currentFiscalYear];
         }
         String vision;
         if(v2momList != null && v2momList.size() > 0){
-            vision = v2momList[0].myV2MOM__Vision__c;
+            vision = v2momList[0].Vision__c;
         }else{
             vision = '';
         }
@@ -179,24 +185,24 @@ public with sharing class V2MOM_Controller {
     
     @auraEnabled
     //Copy Manger's Value
-    public static String referManagerValue(myV2MOM__V2MOM__c V2MOMrec){
+    public static String referManagerValue(V2MOM__c V2MOMrec){
         string managerId =  [Select Id, ManagerId FROM User WHERE Id = :UserInfo.getUserId()].ManagerId;
         String currentFiscalYear = [SELECT FiscalYearSettings.Name FROM Period WHERE Type = 'Year' AND StartDate <= TODAY AND EndDate >= TODAY].FiscalYearSettings.Name;
         List<String> v2momFields = MeasureChatterCtrlSharing.getV2MOMFields();
-        if(!FLSCheck.isAccessible(v2momFields,'myV2MOM__V2MOM__c')){
+        if(!FLSCheck.isAccessible(v2momFields,'V2MOM__c')){
             return '';
         }
-         List <myV2MOM__V2MOM__c> v2momList=new  List <myV2MOM__V2MOM__c>();
+         List <V2MOM__c> v2momList=new  List <V2MOM__c>();
        if(V2MOMrec!=null && V2MOMrec.Id!=null ){
-        v2momList = [SELECT Id, myV2MOM__Values__c from myV2MOM__V2MOM__c 
-                                              WHERE CreatedById =: managerId AND myV2MOM__FY_Year__c =: V2MOMrec.myV2MOM__FY_Year__c];
+        v2momList = [SELECT Id, Values__c from V2MOM__c 
+                                              WHERE CreatedById =: managerId AND FY_Year__c =: V2MOMrec.FY_Year__c];
         }else{
-        v2momList = [SELECT Id, myV2MOM__Values__c from myV2MOM__V2MOM__c 
-                                              WHERE CreatedById =: managerId AND myV2MOM__FY_Year__c =: currentFiscalYear];
+        v2momList = [SELECT Id, Values__c from V2MOM__c 
+                                              WHERE CreatedById =: managerId AND FY_Year__c =: currentFiscalYear];
         }
         String value;
         if(v2momList != null && v2momList.size() > 0){
-            value = v2momList[0].myV2MOM__Values__c;
+            value = v2momList[0].Values__c;
         }else{
             value = '';
         }
@@ -206,20 +212,20 @@ public with sharing class V2MOM_Controller {
     
     @auraEnabled
     //get obstacles and comments for a measure based on the measure id provided
-    public static myV2MOM__Measure__c getObstaclesAndComments(String mId){
+    public static Measure__c getObstaclesAndComments(String mId){
         List<String> measureFields = MeasureChatterCtrlSharing.getMeasureFields();
-        if(!FLSCheck.isAccessible(measureFields,'myV2MOM__Measure__c')){
-            myV2MOM__Measure__c newMeasure = new myV2MOM__Measure__c();
+        if(!FLSCheck.isAccessible(measureFields,'Measure__c')){
+            Measure__c newMeasure = new Measure__c();
             return newMeasure;
         }
-        return [SELECT Id, myV2MOM__Obstacles__c, myV2MOM__Comments__c, myV2MOM__Method__r.myV2MOM__V2MOM__r.myV2MOM__User__c FROM myV2MOM__Measure__c WHERE Id =: mId];
+        return [SELECT Id, Obstacles__c, Comments__c, Method__r.V2MOM__r.User__c FROM Measure__c WHERE Id =: mId];
     }
     
     @auraEnabled
     //update measure's obstacles and comments if edited
-    public static void saveObstaclesAndComments(myV2MOM__Measure__c meas){
+    public static void saveObstaclesAndComments(Measure__c meas){
         List<String> measFields = MeasureChatterCtrlSharing.getMeasureFields();
-        if(FLSCheck.isAccessible(measFields,'myV2MOM__Measure__c') && FLSCheck.isCreateable(measFields,'myV2MOM__Measure__c') && FLSCheck.isUpdateable(measFields,'myV2MOM__Measure__c')){
+        if(FLSCheck.isAccessible(measFields,'Measure__c') && FLSCheck.isCreateable(measFields,'Measure__c') && FLSCheck.isUpdateable(measFields,'Measure__c')){
             upsert meas; 
         }
     }
@@ -237,14 +243,14 @@ public with sharing class V2MOM_Controller {
     
     @auraEnabled
     //method to mark V2MOM as published
-    public static myV2MOM__V2MOM__c publishV2MOM(String v2MOMId){
-        myV2MOM__V2MOM__c vm = new myV2MOM__V2MOM__c();
+    public static V2MOM__c publishV2MOM(String v2MOMId){
+        V2MOM__c vm = new V2MOM__c();
         vm.Id = v2MOMId;
-        vm.myV2MOM__Status__c = 'Published';
-        vm.myV2MOM__Published_Date__c = Date.today();
+        vm.Status__c = 'Published';
+        vm.Published_Date__c = Date.today();
         
         List<String> v2momFields = MeasureChatterCtrlSharing.getV2MOMFields();
-        if(FLSCheck.isAccessible(v2momFields,'myV2MOM__V2MOM__c') && FLSCheck.isCreateable(v2momFields,'myV2MOM__V2MOM__c') && FLSCheck.isUpdateable(v2momFields,'myV2MOM__V2MOM__c')){
+        if(FLSCheck.isAccessible(v2momFields,'V2MOM__c') && FLSCheck.isCreateable(v2momFields,'V2MOM__c') && FLSCheck.isUpdateable(v2momFields,'V2MOM__c')){
             update vm; 
         }
         
@@ -263,31 +269,31 @@ public with sharing class V2MOM_Controller {
     @AuraEnabled
     // handle deletion of a method
     public static void deleteMeasure(Id mId){
-        if(mId.getSObjectType() == myV2MOM__Measure__c.SObjectType){
-            myV2MOM__Measure__c measure = new myV2MOM__Measure__c();
+        if(mId.getSObjectType() == Measure__c.SObjectType){
+            Measure__c measure = new Measure__c();
             measure.Id = mId;
             List<String> measFields = MeasureChatterCtrlSharing.getMeasureFields();
-            if(FLSCheck.isDeletable('myV2MOM__Measure__c')){
+            if(FLSCheck.isDeletable('Measure__c')){
                 delete measure; 
             }
             
-        }else if(mId.getSObjectType() == Schema.myV2MOM__Method__c.SObjectType){
+        }else if(mId.getSObjectType() == Schema.Method__c.SObjectType){
             List<String> measFields = MeasureChatterCtrlSharing.getMeasureFields();
             List<String> mtFields = MeasureChatterCtrlSharing.getMethodFields();
-            myV2MOM__Method__c method = new myV2MOM__Method__c();
+            Method__c method = new Method__c();
             method.Id = mId;
-            List<myV2MOM__Measure__c> measures = new List<myV2MOM__Measure__c>();
-            if(FLSCheck.isAccessible(measFields,'myV2MOM__Measure__c')){
-                measures = [SELECT Id FROM myV2MOM__Measure__c WHERE myV2MOM__Method__c =: mId];
+            List<Measure__c> measures = new List<Measure__c>();
+            if(FLSCheck.isAccessible(measFields,'Measure__c')){
+                measures = [SELECT Id FROM Measure__c WHERE Method__c =: mId];
             }
             
             if(measures.size()>0){
-                if(FLSCheck.isDeletable('myV2MOM__Measure__c')){
+                if(FLSCheck.isDeletable('Measure__c')){
                     delete measures; 
                 }
             }
             
-            if(FLSCheck.isDeletable('myV2MOM__Method__c')){
+            if(FLSCheck.isDeletable('Method__c')){
                 delete method; 
             }
             
@@ -296,18 +302,18 @@ public with sharing class V2MOM_Controller {
     
     @AuraEnabled
     //handles method updates
-    public static void saveEditMethod(myV2MOM__Method__c method){
+    public static void saveEditMethod(Method__c method){
         List<String> mtFields = MeasureChatterCtrlSharing.getMethodFields();
-        if(FLSCheck.isAccessible(mtFields,'myV2MOM__Method__c') && FLSCheck.isCreateable(mtFields,'myV2MOM__Method__c') && FLSCheck.isUpdateable(mtFields,'myV2MOM__Method__c')){
+        if(FLSCheck.isAccessible(mtFields,'Method__c') && FLSCheck.isCreateable(mtFields,'Method__c') && FLSCheck.isUpdateable(mtFields,'Method__c')){
             update method;
         }
         
     }
     
     @auraEnabled
-    public static void updateMethodSequence(List<myV2MOM__Method__c> methodstoBeUpdated){
+    public static void updateMethodSequence(List<Method__c> methodstoBeUpdated){
         List<String> mtFields = MeasureChatterCtrlSharing.getMethodFields();
-        if(FLSCheck.isAccessible(mtFields,'myV2MOM__Method__c') && FLSCheck.isCreateable(mtFields,'myV2MOM__Method__c') && FLSCheck.isUpdateable(mtFields,'myV2MOM__Method__c')){
+        if(FLSCheck.isAccessible(mtFields,'Method__c') && FLSCheck.isCreateable(mtFields,'Method__c') && FLSCheck.isUpdateable(mtFields,'Method__c')){
             update methodstoBeUpdated;
         }
     }

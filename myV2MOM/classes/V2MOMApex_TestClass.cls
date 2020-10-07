@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2018, salesforce.com, inc.
+ * All rights reserved.
+ * SPDX-License-Identifier: BSD-3-Clause
+ * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
 @isTest
 public class V2MOMApex_TestClass {
     
@@ -76,7 +82,7 @@ public class V2MOMApex_TestClass {
             
             /*system.debug('---------- + '+ [Select FirstName from User]);
 
-myV2MOM__V2MOM__c vm = new myV2MOM__V2MOM__c();
+V2MOM__c vm = new V2MOM__c();
 vm.Name = 'Test';*/
             
             V2MOM_Controller.getUserId();
@@ -84,19 +90,19 @@ vm.Name = 'Test';*/
             V2MOM_Controller.isUserAManager(userInfo.getUserId());
             V2MOM_Controller.isUserAManager(reportee.Id);
             //V2MOM_Controller.testCreateMethod();
-            myV2MOM__V2MOM__c v2mom = V2MOM_Controller.saveV2V('Vision', 'Values', null);
+            V2MOM__c v2mom = V2MOM_Controller.saveV2V('Vision', 'Values', null);
             V2MOM_Controller.saveV2V('Vision', 'Values', '');
             V2MOM_Controller.saveV2V('Vision', 'Values', v2mom.Id);
             V2MOM_InItWrapper initWrap = V2MOM_Controller.V2MOM_InIt(v2mom.Id);
             /*V2MOM_Controller.getMyV2MOM(UserInfo.getUserId(), null);
 			V2MOM_Controller.getMyV2MOM(null, v2mom.Id);*/
-            myV2MOM__Method__c method1 = new myV2MOM__Method__c();
+            Method__c method1 = new Method__c();
             method1.Name = 'Method1';
-            List<myV2MOM__Method__c> methodLst = V2MOM_Controller.createMethod(method1, v2mom.Id);
-            //List<myV2MOM__Method__c> getAllMethods = V2MOM_Controller.getAllMethods(v2mom.Id);
-            myV2MOM__Method__c testMet = new myV2MOM__Method__c();
+            List<Method__c> methodLst = V2MOM_Controller.createMethod(method1, v2mom.Id);
+            //List<Method__c> getAllMethods = V2MOM_Controller.getAllMethods(v2mom.Id);
+            Method__c testMet = new Method__c();
             testMet.Name = 'T1';
-            testMet.myV2MOM__V2MOM__c = v2mom.Id;
+            testMet.V2MOM__c = v2mom.Id;
             insert testMet;
             system.debug('v2mom.Id '+ v2mom.Id);
 
@@ -106,30 +112,30 @@ vm.Name = 'Test';*/
             V2MOM_Measure_Controller.getProgressTypes();
             V2MOM_Measure_Controller.getPriorityTypes();
             V2MOM_Measure_Controller.getStatusTypes();
-            myV2MOM__Measure__c measure = new myV2MOM__Measure__c();
+            Measure__c measure = new Measure__c();
                 measure.Name = 'Assist';
-                measure.myV2MOM__Track_Progress_By__c = 'N';
-                measure.myV2MOM__Priority__c = 'H';
-                measure.myV2MOM__Completion_By_Quarter__c = 'Q1';
-                measure.myV2MOM__Split_By_Quarter__c = true;
-                measure.myV2MOM__Target_Value__c = 100;
-                measure.myV2MOM__Q1__c = 25;
-                measure.myV2MOM__Q2__c = 25;
-                measure.myV2MOM__Q3__c = 25;
-                measure.myV2MOM__Q4__c = 25;
-            	measure.myV2MOM__Method__c = methodLst[0].Id;
-            myV2MOM__Measure__c measure1 = new myV2MOM__Measure__c();
+                measure.Track_Progress_By__c = 'N';
+                measure.Priority__c = 'H';
+                measure.Completion_By_Quarter__c = 'Q1';
+                measure.Split_By_Quarter__c = true;
+                measure.Target_Value__c = 100;
+                measure.Q1__c = 25;
+                measure.Q2__c = 25;
+                measure.Q3__c = 25;
+                measure.Q4__c = 25;
+            	measure.Method__c = methodLst[0].Id;
+            Measure__c measure1 = new Measure__c();
                 measure1.Name = 'Demo Comp';
-                measure1.myV2MOM__Track_Progress_By__c = 'C';
-                measure1.myV2MOM__Priority__c = 'M';
-                measure1.myV2MOM__Completion_By_Quarter__c = 'Q2';
-            	measure1.myV2MOM__Method__c = methodLst[0].Id;
-            myV2MOM__Measure__c measure2 = new myV2MOM__Measure__c();
+                measure1.Track_Progress_By__c = 'C';
+                measure1.Priority__c = 'M';
+                measure1.Completion_By_Quarter__c = 'Q2';
+            	measure1.Method__c = methodLst[0].Id;
+            Measure__c measure2 = new Measure__c();
                 measure2.Name = 'Test';
-                measure2.myV2MOM__Track_Progress_By__c = 'C';
-                measure2.myV2MOM__Priority__c = 'L';
-                measure2.myV2MOM__Completion_By_Quarter__c = 'Q3';
-            	measure2.myV2MOM__Method__c = methodLst[0].Id;
+                measure2.Track_Progress_By__c = 'C';
+                measure2.Priority__c = 'L';
+                measure2.Completion_By_Quarter__c = 'Q3';
+            	measure2.Method__c = methodLst[0].Id;
             V2MOM_Measure_Controller.createMeasure(measure);
             V2MOM_Measure_Controller.createMeasure(measure1);
             V2MOM_Measure_Controller.createMeasure(measure2);
@@ -154,31 +160,31 @@ vm.Name = 'Test';*/
             /** For V2MOM_TeamViewCtrl ****************************************************************************************************/
             system.runAs(reportee){
                 /** For V2MOM_Controller ****************************************************************************************************/
-                myV2MOM__V2MOM__c v2mom1 = V2MOM_Controller.saveV2V('Vision', 'Values', null);
-                 myV2MOM__Method__c method2 = new myV2MOM__Method__c();
-                List<myV2MOM__Method__c> methodLst2 = V2MOM_Controller.createMethod(method2, v2mom1.Id);
-                myV2MOM__Measure__c measure3 = new myV2MOM__Measure__c();
+                V2MOM__c v2mom1 = V2MOM_Controller.saveV2V('Vision', 'Values', null);
+                 Method__c method2 = new Method__c();
+                List<Method__c> methodLst2 = V2MOM_Controller.createMethod(method2, v2mom1.Id);
+                Measure__c measure3 = new Measure__c();
                 measure3.Name = 'Assist';
-                measure3.myV2MOM__Track_Progress_By__c = 'N';
-                measure3.myV2MOM__Priority__c = 'H';
-                measure3.myV2MOM__Completion_By_Quarter__c = 'Q1';
-                measure3.myV2MOM__Split_By_Quarter__c = true;
-                measure3.myV2MOM__Target_Value__c = 100;
-                measure3.myV2MOM__Q1__c = 25;
-                measure3.myV2MOM__Q2__c = 25;
-                measure3.myV2MOM__Q3__c = 25;
-                measure3.myV2MOM__Q4__c = 25;
-                measure3.myV2MOM__Status__c = 'Behind Schedule';
-            	measure3.myV2MOM__Method__c = methodLst[0].Id;
+                measure3.Track_Progress_By__c = 'N';
+                measure3.Priority__c = 'H';
+                measure3.Completion_By_Quarter__c = 'Q1';
+                measure3.Split_By_Quarter__c = true;
+                measure3.Target_Value__c = 100;
+                measure3.Q1__c = 25;
+                measure3.Q2__c = 25;
+                measure3.Q3__c = 25;
+                measure3.Q4__c = 25;
+                measure3.Status__c = 'Behind Schedule';
+            	measure3.Method__c = methodLst[0].Id;
                 V2MOM_Measure_Controller.createMeasure(measure3);
                 
-                myV2MOM__Measure__c measure4 = new myV2MOM__Measure__c();
+                Measure__c measure4 = new Measure__c();
                 measure4.Name = 'Test';
-                measure4.myV2MOM__Track_Progress_By__c = 'C';
-                measure4.myV2MOM__Priority__c = 'L';
-                measure4.myV2MOM__Completion_By_Quarter__c = 'Q3';
-                measure4.myV2MOM__Status__c = 'On Track';
-                measure4.myV2MOM__Method__c = methodLst[0].Id;
+                measure4.Track_Progress_By__c = 'C';
+                measure4.Priority__c = 'L';
+                measure4.Completion_By_Quarter__c = 'Q3';
+                measure4.Status__c = 'On Track';
+                measure4.Method__c = methodLst[0].Id;
                 V2MOM_Measure_Controller.createMeasure(measure4);
                 
                 V2MOM_Controller.referManagerVision(v2mom1);
@@ -224,9 +230,9 @@ vm.Name = 'Test';*/
                 MeasureChatterCtrl.updateMeasureFeedComment(fList[0].Id, 'Test Comment');
             }
 
-            /*myV2MOM__Method__c testMet1 = new myV2MOM__Method__c();
+            /*Method__c testMet1 = new Method__c();
             testMet1.Name = 'T1';
-            testMet1.myV2MOM__V2MOM__c = v2mom.Id;
+            testMet1.V2MOM__c = v2mom.Id;
             insert testMet1;*/
             V2MOM_Controller.saveEditMethod(testMet);
             V2MOM_Controller.deleteMeasure(testMet.Id);

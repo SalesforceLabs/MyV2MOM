@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2018, salesforce.com, inc.
+ * All rights reserved.
+ * SPDX-License-Identifier: BSD-3-Clause
+ * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
 /* This class helps in handling the common business logic used across the application. */
 public with sharing class V2MOM_UtilCls{
     
@@ -28,13 +34,13 @@ public with sharing class V2MOM_UtilCls{
     /* This is a wrapper class for displaying methods and its measures both in mobile and desktop. */
     public class newMethodAndMeasureWrap{
         @AuraEnabled
-        public List<myV2MOM__Method__c> myMnM {get; set;}
+        public List<Method__c> myMnM {get; set;}
         @AuraEnabled
         public List<recListWrap> assignedMnM {get; set;}
         @AuraEnabled
         public List<recListWrap> adoptedMnM {get; set;}
         
-        public newMethodAndMeasureWrap(List<myV2MOM__Method__c> myMnM, List<recListWrap> assignedMnM, List<recListWrap> adoptedMnM){
+        public newMethodAndMeasureWrap(List<Method__c> myMnM, List<recListWrap> assignedMnM, List<recListWrap> adoptedMnM){
             this.myMnM = myMnM;
             this.assignedMnM = assignedMnM;
             this.adoptedMnM = adoptedMnM;
@@ -44,65 +50,65 @@ public with sharing class V2MOM_UtilCls{
     /* This method helps in returning data for methods and measures. */ 
     @AuraEnabled
     public static newMethodAndMeasureWrap getMnMNew(string v2MOMId){
-        if(!(FLSCheck.isAccessible(MeasureChatterCtrlSharing.getV2MOMFields(), 'myV2MOM__V2MOM__c') && FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMethodFields(), 'myV2MOM__Method__c') && FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureFields(), 'myV2MOM__Measure__c') && FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureTeamFields(), 'myV2MOM__Measure_Team__c'))){
+        if(!(FLSCheck.isAccessible(MeasureChatterCtrlSharing.getV2MOMFields(), 'V2MOM__c') && FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMethodFields(), 'Method__c') && FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureFields(), 'Measure__c') && FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureTeamFields(), 'Measure_Team__c'))){
             return null;
         }
         String currentFiscalYear = [SELECT FiscalYearSettings.Name FROM Period WHERE Type = 'Year' AND StartDate <= TODAY AND EndDate >= TODAY].FiscalYearSettings.Name;
-        myV2MOM__V2MOM__c v2mom;
+        V2MOM__c v2mom;
         if(v2MOMId != null && v2MOMId != ''){
-			v2mom = [Select Id, Name, CreatedById, myV2MOM__FY_Year__c, (Select Id, Name from Methods__r) from myV2MOM__V2MOM__c where Id =: v2MOMId];            
+			v2mom = [Select Id, Name, CreatedById, FY_Year__c, (Select Id, Name from Methods__r) from V2MOM__c where Id =: v2MOMId];            
         }else{
-            v2mom = new myV2MOM__V2MOM__c();
+            v2mom = new V2MOM__c();
         }
         
-        List<myV2MOM__Method__c> myMethods= new List<myV2MOM__Method__c>([Select myV2MOM__V2MOM__c, myV2MOM__Order__c, myV2MOM__Description__c, Name, Id, 
-                                                                                  (Select Id, Name, myV2MOM__Comments__c, myV2MOM__Completion_By_Date__c, 
-                                                                                   myV2MOM__Completion_By_Quarter__c, myV2MOM__Current_Value__c, myV2MOM__MeasureChatFeedId__c, 
-                                                                                   myV2MOM__Method__c, myV2MOM__Obstacles__c, myV2MOM__Priority__c, myV2MOM__Q1__c, myV2MOM__Q2__c, myV2MOM__Q3__c, myV2MOM__Q4__c, 
-                                                                                   myV2MOM__Split_By_Quarter__c, myV2MOM__Status__c, myV2MOM__Target_Value__c, myV2MOM__Track_Progress_By__c, myV2MOM__Q1_Target__c, myV2MOM__Q2_Target__c, 
-                                                                                   myV2MOM__Q3_Target__c, myV2MOM__Q4_Target__c, myV2MOM__Q1_Completion__c, myV2MOM__Q2_Completion__c, myV2MOM__Q3_Completion__c, myV2MOM__Q4_Completion__c, myV2MOM__Assigned_Current_Value__c, myV2MOM__Total_Current_Value__c, myV2MOM__Measure_Team_Member_Count__c
-                                                                                   From myV2MOM__Measures__r order by myV2MOM__Priority__c) 
-                                                                          FROM myV2MOM__Method__c 
-                                                                          WHERE myV2MOM__V2MOM__c =: v2MOMId 
-                                                                          order by myV2MOM__Order__c ASC]);
+        List<Method__c> myMethods= new List<Method__c>([Select V2MOM__c, Order__c, Description__c, Name, Id, 
+                                                                                  (Select Id, Name, Comments__c, Completion_By_Date__c, 
+                                                                                   Completion_By_Quarter__c, Current_Value__c, MeasureChatFeedId__c, 
+                                                                                   Method__c, Obstacles__c, Priority__c, Q1__c, Q2__c, Q3__c, Q4__c, 
+                                                                                   Split_By_Quarter__c, Status__c, Target_Value__c, Track_Progress_By__c, Q1_Target__c, Q2_Target__c, 
+                                                                                   Q3_Target__c, Q4_Target__c, Q1_Completion__c, Q2_Completion__c, Q3_Completion__c, Q4_Completion__c, Assigned_Current_Value__c, Total_Current_Value__c, Measure_Team_Member_Count__c
+                                                                                   From Measures__r order by Priority__c) 
+                                                                          FROM Method__c 
+                                                                          WHERE V2MOM__c =: v2MOMId 
+                                                                          order by Order__c ASC]);
         
-    	List<myV2MOM__Measure_Team__c> assignAdoptMeas = new List<myV2MOM__Measure_Team__c>([Select myV2MOM__Measure__r.Name, myV2MOM__Measure__r.myV2MOM__Track_Progress_By__c, myV2MOM__Measure__r.myV2MOM__Method__r.Name, myV2MOM__Measure__r.myV2MOM__Method__r.myV2MOM__Description__c, myV2MOM__Measure__r.myV2MOM__Method__c,myV2MOM__Type__c, 
-                                                                                             myV2MOM__Target_Value__c, myV2MOM__Percentage__c, myV2MOM__Current_Value__c, myV2MOM__Status__c, myV2MOM__Measure__r.myV2MOM__Completion_By_Date__c, myV2MOM__Measure__r.myV2MOM__Priority__c, myV2MOM__Member__c, myV2MOM__Measure__c, Name, Id, CreatedById 
-                                                                                             FROM myV2MOM__Measure_Team__c 
-                                                                                             WHERE myV2MOM__Member__c  =: v2mom.CreatedById AND Measure__r.Method__r.V2MOM__r.FY_Year__c =:v2mom.myV2MOM__FY_Year__c ]);
+    	List<Measure_Team__c> assignAdoptMeas = new List<Measure_Team__c>([Select Measure__r.Name, Measure__r.Track_Progress_By__c, Measure__r.Method__r.Name, Measure__r.Method__r.Description__c, Measure__r.Method__c,Type__c, 
+                                                                                             Target_Value__c, Percentage__c, Current_Value__c, Status__c, Measure__r.Completion_By_Date__c, Measure__r.Priority__c, Member__c, Measure__c, Name, Id, CreatedById 
+                                                                                             FROM Measure_Team__c 
+                                                                                             WHERE Member__c  =: v2mom.CreatedById AND Measure__r.Method__r.V2MOM__r.FY_Year__c =:v2mom.FY_Year__c ]);
         
-        Map<myV2MOM__Method__c, List<myV2MOM__Measure_Team__c>> assignedMeasures = new Map<myV2MOM__Method__c, List<myV2MOM__Measure_Team__c>>();
-        Map<myV2MOM__Method__c, List<myV2MOM__Measure_Team__c>> adoptedMeasures = new Map<myV2MOM__Method__c, List<myV2MOM__Measure_Team__c>>();
+        Map<Method__c, List<Measure_Team__c>> assignedMeasures = new Map<Method__c, List<Measure_Team__c>>();
+        Map<Method__c, List<Measure_Team__c>> adoptedMeasures = new Map<Method__c, List<Measure_Team__c>>();
         
         List<recListWrap> assignedMnM = new List<recListWrap>();
         List<recListWrap> adoptedMnM = new List<recListWrap>();
         
-        for(myV2MOM__Measure_Team__c mt : assignAdoptMeas){
-            myV2MOM__Method__c testMethod1 = new myV2MOM__Method__c();
-            testMethod1.id = mt.myV2MOM__Measure__r.myV2MOM__Method__c;
-            testMethod1.Name = mt.myV2MOM__Measure__r.myV2MOM__Method__r.Name;
-            testMethod1.myV2MOM__Description__c = mt.myV2MOM__Measure__r.myV2MOM__Method__r.myV2MOM__Description__c;
-            if(mt.myV2MOM__Type__c == 'Assigned'){
+        for(Measure_Team__c mt : assignAdoptMeas){
+            Method__c testMethod1 = new Method__c();
+            testMethod1.id = mt.Measure__r.Method__c;
+            testMethod1.Name = mt.Measure__r.Method__r.Name;
+            testMethod1.Description__c = mt.Measure__r.Method__r.Description__c;
+            if(mt.Type__c == 'Assigned'){
                 if(assignedMeasures.get(testMethod1) != null){
                     assignedMeasures.get(testMethod1).add(mt);
                 }else{
-                    assignedMeasures.put(testMethod1, new list<myV2MOM__Measure_Team__c>());
+                    assignedMeasures.put(testMethod1, new list<Measure_Team__c>());
                     assignedMeasures.get(testMethod1).add(mt);
                 }
-            }else if(mt.myV2MOM__Type__c == 'Adopted'){
+            }else if(mt.Type__c == 'Adopted'){
                 if(adoptedMeasures.get(testMethod1) != null){
                     adoptedMeasures.get(testMethod1).add(mt);
                 }else{
-                    adoptedMeasures.put(testMethod1, new list<myV2MOM__Measure_Team__c>());
+                    adoptedMeasures.put(testMethod1, new list<Measure_Team__c>());
                     adoptedMeasures.get(testMethod1).add(mt);
                 }
             }
         }
         
-        for(myV2MOM__Method__c method : assignedMeasures.keySet()){
+        for(Method__c method : assignedMeasures.keySet()){
             assignedMnM.add(new recListWrap(method, assignedMeasures.get(method)));
         }
-        for(myV2MOM__Method__c method : adoptedMeasures.keySet()){
+        for(Method__c method : adoptedMeasures.keySet()){
             adoptedMnM.add(new recListWrap(method, adoptedMeasures.get(method)));
         }
         
@@ -124,30 +130,30 @@ public with sharing class V2MOM_UtilCls{
     
     /* This method helps in getting the methods for a particular V2MOM. */
     @AuraEnabled
-    public static List<myV2MOM__Method__c> getCurrentV2MOMMethods(string currentUsedV2MOMId){
-        if(!FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMethodFields(), 'myV2MOM__Method__c')){
-            return new List<myV2MOM__Method__c>();
+    public static List<Method__c> getCurrentV2MOMMethods(string currentUsedV2MOMId){
+        if(!FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMethodFields(), 'Method__c')){
+            return new List<Method__c>();
         }
-        return new List<myV2MOM__Method__c>([Select Id, Name from myV2MOM__Method__c where myV2MOM__V2MOM__c =: currentUsedV2MOMId]);
+        return new List<Method__c>([Select Id, Name from Method__c where V2MOM__c =: currentUsedV2MOMId]);
     }
     
     /* This method helps in creating a measure from other's V2MOM. */
     @AuraEnabled
-    public static void copyMeasureToMyV2MOM(string methodId, myV2MOM__Measure__c measure, string currentUsedV2MOMId, String measureName){
+    public static void copyMeasureToMyV2MOM(string methodId, Measure__c measure, string currentUsedV2MOMId, String measureName){
         system.debug('methodId >>>>> '+ methodId +'   measure   >>>>>> '+measure+'   currentUsedV2MOMId     >>>>>>'+currentUsedV2MOMId+'   measureName    >>>>>>'+measureName);
         try{
-            if(FLSCheck.isCreateable(MeasureChatterCtrlSharing.getMeasureFields(), 'myV2MOM__Measure__c') && FLSCheck.isCreateable(MeasureChatterCtrlSharing.getMethodFields(), 'myV2MOM__Method__c')){
-                myV2MOM__Measure__c measureCopy = new myV2MOM__Measure__c();
+            if(FLSCheck.isCreateable(MeasureChatterCtrlSharing.getMeasureFields(), 'Measure__c') && FLSCheck.isCreateable(MeasureChatterCtrlSharing.getMethodFields(), 'Method__c')){
+                Measure__c measureCopy = new Measure__c();
                 measureCopy = measure.clone();
                 if(methodId != null){
-                    measureCopy.myV2MOM__Method__c = methodId;
+                    measureCopy.Method__c = methodId;
                 }else{
-                    myV2MOM__Method__c newMethod = new myV2MOM__Method__c(Name = measureName, myV2MOM__V2MOM__c = currentUsedV2MOMId);
+                    Method__c newMethod = new Method__c(Name = measureName, V2MOM__c = currentUsedV2MOMId);
                     insert newMethod;
-                    measureCopy.myV2MOM__Method__c = newMethod.Id;
-                    measureCopy.myV2MOM__Current_Value__c = 0;
+                    measureCopy.Method__c = newMethod.Id;
+                    measureCopy.Current_Value__c = 0;
                 }
-                if(measureCopy.myV2MOM__Method__c != null){
+                if(measureCopy.Method__c != null){
                     insert measureCopy;
                 }
             }else{
@@ -164,11 +170,11 @@ public with sharing class V2MOM_UtilCls{
         try{
             List<labelValueWrap> options = new List<labelValueWrap>();
             
-            if(!FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureFields(), 'myV2MOM__Measure__c')){
+            if(!FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureFields(), 'Measure__c')){
                 return options;
             }
             
-            Schema.DescribeFieldResult fieldResult = myV2MOM__Measure__c.myV2MOM__Status__c.getDescribe();
+            Schema.DescribeFieldResult fieldResult = Measure__c.Status__c.getDescribe();
             List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
             
             for( Schema.PicklistEntry f : ple){
@@ -230,12 +236,12 @@ public with sharing class V2MOM_UtilCls{
     
     /* This method helps in fetchin measure team records of a measure. */
     @AuraEnabled
-    public static List<myV2MOM__Measure_Team__c> getExistingMeasureTeam(string measureId){
-        if(!FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureTeamFields(), 'myV2MOM__Measure_Team__c')){
-            return new List<myV2MOM__Measure_Team__c>();
+    public static List<Measure_Team__c> getExistingMeasureTeam(string measureId){
+        if(!FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureTeamFields(), 'Measure_Team__c')){
+            return new List<Measure_Team__c>();
         }
         try{
-            List<myV2MOM__Measure_Team__c> meaTeamList = [Select Id, myV2MOM__Member__c, myV2MOM__Target_Value__c, myV2MOM__Percentage__c from myV2MOM__Measure_Team__c where myV2MOM__Measure__c =: MeasureId and myV2MOM__Type__c = 'Assigned'];
+            List<Measure_Team__c> meaTeamList = [Select Id, Member__c, Target_Value__c, Percentage__c from Measure_Team__c where Measure__c =: MeasureId and Type__c = 'Assigned'];
             return meaTeamList;
         }catch(exception e){
             throw new AuraHandledException(e.getMessage());
@@ -244,12 +250,12 @@ public with sharing class V2MOM_UtilCls{
     
     /* This method helps in fetchin measure team records of a measure. */
     @AuraEnabled
-    public static List<myV2MOM__Measure_Team__c> getMeasureAssignees(Id MeasureId){
-        if(!FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureTeamFields(), 'myV2MOM__Measure_Team__c')){
-            return new List<myV2MOM__Measure_Team__c>();
+    public static List<Measure_Team__c> getMeasureAssignees(Id MeasureId){
+        if(!FLSCheck.isAccessible(MeasureChatterCtrlSharing.getMeasureTeamFields(), 'Measure_Team__c')){
+            return new List<Measure_Team__c>();
         }
         try{
-            return [Select Id, myV2MOM__Member__c, myV2MOM__Target_Value__c, myV2MOM__Percentage__c, myV2MOM__Current_Value__c, myV2MOM__Status__c from myV2MOM__Measure_Team__c where myV2MOM__Measure__c =: MeasureId and myV2MOM__Type__c = 'Assigned'];
+            return [Select Id, Member__c, Target_Value__c, Percentage__c, Current_Value__c, Status__c from Measure_Team__c where Measure__c =: MeasureId and Type__c = 'Assigned'];
         }catch(exception e){
             throw new AuraHandledException(e.getMessage());
         }
@@ -279,7 +285,7 @@ public with sharing class V2MOM_UtilCls{
     @AuraEnabled
     public static boolean setMeasureAssignees(Id MeasureId, String currentUserIds, String previousUserIds, String measureTarStr){
         try{
-            if(!(FLSCheck.isDeletable('myV2MOM__Measure_Team__c') && FLSCheck.isUpdateable(MeasureChatterCtrlSharing.getMeasureTeamFields(), 'myV2MOM__Measure_Team__c') && FLSCheck.isCreateable(MeasureChatterCtrlSharing.getMeasureTeamFields(), 'myV2MOM__Measure_Team__c') && FLSCheck.isUpdateable(MeasureChatterCtrlSharing.getMeasureTeamFields(), 'myV2MOM__Measure_Team__c'))){
+            if(!(FLSCheck.isDeletable('Measure_Team__c') && FLSCheck.isUpdateable(MeasureChatterCtrlSharing.getMeasureTeamFields(), 'Measure_Team__c') && FLSCheck.isCreateable(MeasureChatterCtrlSharing.getMeasureTeamFields(), 'Measure_Team__c') && FLSCheck.isUpdateable(MeasureChatterCtrlSharing.getMeasureTeamFields(), 'Measure_Team__c'))){
                 return false;
             }
             
@@ -304,13 +310,13 @@ public with sharing class V2MOM_UtilCls{
             usersToRemove.removeAll(cUsrSet);
             
             if(usersToRemove.size() > 0){
-                delete [Select Id from myV2MOM__Measure_Team__c where myV2MOM__Measure__c =: MeasureId and myV2MOM__Type__c = 'Assigned' and myV2MOM__Member__c =: usersToRemove];
+                delete [Select Id from Measure_Team__c where Measure__c =: MeasureId and Type__c = 'Assigned' and Member__c =: usersToRemove];
             }
             
             Map<Id, Measure_Team__c> exisMeasTeamMap = new Map<Id, Measure_Team__c>();
-            List<Measure_Team__c> exisMeasTeam = [Select Id, myV2MOM__Member__c from myV2MOM__Measure_Team__c where myV2MOM__Measure__c =: MeasureId and myV2MOM__Type__c = 'Assigned' and myV2MOM__Member__c =: cUsrSet];
+            List<Measure_Team__c> exisMeasTeam = [Select Id, Member__c from Measure_Team__c where Measure__c =: MeasureId and Type__c = 'Assigned' and Member__c =: cUsrSet];
             for(Measure_Team__c mt : exisMeasTeam){
-                exisMeasTeamMap.put(mt.myV2MOM__Member__c, mt);
+                exisMeasTeamMap.put(mt.Member__c, mt);
             }
             Set<String> usersToAdd = cUsrSet.clone();
             usersToAdd.removeAll(oUsrSet);
@@ -321,25 +327,25 @@ public with sharing class V2MOM_UtilCls{
                     List<Measure_Team__c> mTeamUpdate = new List<Measure_Team__c>();
                     for(String s : cUsrSet){
                         if(exisMeasTeamMap.containsKey(s)){
-                            myV2MOM__Measure_Team__c mtm = exisMeasTeamMap.get(s);
-                            mtm.myV2MOM__Percentage__c = meaTeamTarWMap.get(mtm.myV2MOM__Member__c).percentTar;
+                            Measure_Team__c mtm = exisMeasTeamMap.get(s);
+                            mtm.Percentage__c = meaTeamTarWMap.get(mtm.Member__c).percentTar;
                             mTeamUpdate.add(mtm);
                         }else{
-                            myV2MOM__Measure_Team__c mtm = new myV2MOM__Measure_Team__c();
-                            mtm.myV2MOM__Type__c = 'Assigned';
-                            mtm.myV2MOM__Member__c = Id.valueOf(s);
-                            mtm.myV2MOM__Measure__c = MeasureId;
-                            //mtm.myV2MOM__Target_Value__c = meaTeamTarWMap.get(mtm.myV2MOM__Member__c).actualTar;
-                            mtm.myV2MOM__Percentage__c = meaTeamTarWMap.get(mtm.myV2MOM__Member__c).percentTar;
+                            Measure_Team__c mtm = new Measure_Team__c();
+                            mtm.Type__c = 'Assigned';
+                            mtm.Member__c = Id.valueOf(s);
+                            mtm.Measure__c = MeasureId;
+                            //mtm.Target_Value__c = meaTeamTarWMap.get(mtm.Member__c).actualTar;
+                            mtm.Percentage__c = meaTeamTarWMap.get(mtm.Member__c).percentTar;
                             mTeam.add(mtm);
-                            userShareList.add(mtm.myV2MOM__Member__c);
+                            userShareList.add(mtm.Member__c);
                         }
                     }
-                    if(FLSCheck.isCreateable(MeasureChatterCtrlSharing.getMeasureTeamFields(), 'myV2MOM__Measure_Team__c')){
+                    if(FLSCheck.isCreateable(MeasureChatterCtrlSharing.getMeasureTeamFields(), 'Measure_Team__c')){
                     	insert mTeam;                        
                     }
                     for(Measure_Team__c mTeamObj : mTeam){
-                        postChatterMsg(mTeamObj.myV2MOM__Member__c, ',\nA measure is assigned. Please check your V2MOM.' ,mTeamObj.Id);
+                        postChatterMsg(mTeamObj.Member__c, ',\nA measure is assigned. Please check your V2MOM.' ,mTeamObj.Id);
                     }
                     MeasureChatterCtrlSharing.shareMeasureManually(MeasureId,userShareList);
                     

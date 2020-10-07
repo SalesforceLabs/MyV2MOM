@@ -4,7 +4,7 @@
 		var isMeasureTeam = component.get('v.isMeasureTeam');
         if(measure){
             if(isMeasureTeam){
-                component.find('commentComponent').showPopoverModal(measure.myV2MOM__Measure__r.Name,measure.Id);
+                component.find('commentComponent').showPopoverModal(measure.Measure__r.Name,measure.Id);
             }else{
                 component.find('commentComponent').showPopoverModal(measure.Name,measure.Id);
             }

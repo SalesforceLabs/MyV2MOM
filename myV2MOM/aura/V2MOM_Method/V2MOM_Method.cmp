@@ -19,7 +19,7 @@
                 <aura:if isTrue="{!v.isReadOnly == false}">
                     <div class="slds-form slds-form_stacked">
                         <lightning:input type="text" name="Method Name" label="Method Name" value="{!v.method.Name}" required="true" />
-                        <lightning:textarea name="description" value="{!v.method.myV2MOM__Description__c }" label="Description"  />
+                        <lightning:textarea name="description" value="{!v.method.Description__c }" label="Description"  />
                     </div>
                 </aura:if>
                 <aura:set attribute="else">
@@ -32,7 +32,7 @@
                     <lightning:layout >
                         <lightning:layoutItem padding="around-small" size="12">
                             <label class="slds-form-element__label" >Description</label>
-                            <ui:outputText class="slds-text-body_regular" value="{!v.method.myV2MOM__Description__c}" />
+                            <ui:outputText class="slds-text-body_regular" value="{!v.method.Description__c}" />
                         </lightning:layoutItem>
                     </lightning:layout>
                 </aura:set>

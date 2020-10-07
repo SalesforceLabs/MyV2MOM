@@ -136,8 +136,8 @@
                 var state = a.getState();
                 if (state === "SUCCESS") {
                     var v2momObj = a.getReturnValue();
-                    component.set("v.vision", v2momObj.MyV2MOM__Vision__c);
-                    component.set("v.value", v2momObj.MyV2MOM__Values__c);
+                    component.set("v.vision", v2momObj.Vision__c);
+                    component.set("v.value", v2momObj.Values__c);
                     component.set("v.v2momId", v2momObj.Id);
                     component.set("v.disableSaveVisionAndValueButton", true);
                     component.set("v.disablePublishButton", false);
@@ -162,8 +162,8 @@
     onChangeVisionOrValue : function(component, event, helper) {
         var value = component.get("v.value");
         var vision = component.get("v.vision");
-        var visionOld = component.get("v.myV2mom.myV2MOM__Vision__c");
-        var valueOld = component.get("v.myV2mom.myV2MOM__Values__c");
+        var visionOld = component.get("v.myV2mom.Vision__c");
+        var valueOld = component.get("v.myV2mom.Values__c");
         if(value && vision){
             if(value.length <=0 || vision.length <=0){
                 component.set("v.disableSaveVisionAndValueButton", true);
@@ -199,8 +199,8 @@
             if (state === "SUCCESS") {
                 var v2momObj = a.getReturnValue();
                 helper.toastMessage('Success!', 'V2MOM Published successfully.', 'success');
-                component.set("v.myV2mom.myV2MOM__Status__c", v2momObj.myV2MOM__Status__c);
-                component.set("v.myV2mom.myV2MOM__Published_Date__c", v2momObj.myV2MOM__Published_Date__c);
+                component.set("v.myV2mom.Status__c", v2momObj.Status__c);
+                component.set("v.myV2mom.Published_Date__c", v2momObj.Published_Date__c);
             }
             
         });
@@ -279,7 +279,7 @@
     },
     viewAssignedMeasureObstaclesAndComments : function(component, event, helper) {
         var rec = event.getSource().get('v.value');
-        component.find('showObsAndComments').showObstaclesComments(rec.myV2MOM__Measure__r.Name, rec.myV2MOM__Measure__r.Id, component.get("v.currentUserId"),component.get("v.v2momUserId"),true);
+        component.find('showObsAndComments').showObstaclesComments(rec.Measure__r.Name, rec.Measure__r.Id, component.get("v.currentUserId"),component.get("v.v2momUserId"),true);
     },
     editAssignedMeasure : function(component, event, helper) {
         var rec = event.getSource().get('v.value');

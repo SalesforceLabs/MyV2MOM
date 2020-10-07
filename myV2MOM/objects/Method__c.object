@@ -48,7 +48,6 @@
     <enableBulkApi>true</enableBulkApi>
     <enableFeeds>true</enableFeeds>
     <enableHistory>true</enableHistory>
-    <enableLicensing>false</enableLicensing>
     <enableReports>true</enableReports>
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
@@ -95,7 +94,6 @@
         <type>Lookup</type>
     </fields>
     <label>Method</label>
-    <language>en_US</language>
     <listViews>
         <fullName>All</fullName>
         <columns>NAME</columns>

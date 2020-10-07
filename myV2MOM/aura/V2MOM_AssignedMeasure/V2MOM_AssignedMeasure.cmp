@@ -16,17 +16,17 @@
                     <div class="slds-form-element__group">
                         <div class="slds-form-element__row">
                             <div class="slds-form-element slds-size_1-of-2">
-                                <lightning:input name="input" readonly="true" value="{!v.measure.myV2MOM__Measure__r.Name}" label="Measure Name" />
+                                <lightning:input name="input" readonly="true" value="{!v.measure.Measure__r.Name}" label="Measure Name" />
                             </div>
                         </div>
                     </div>
                     <div class="slds-form-element__group">
                         <div class="slds-form-element__row">
-                            <aura:if isTrue="{!equals(v.measure.myV2MOM__Measure__r.myV2MOM__Track_Progress_By__c, 'Numbers Completed')}">
+                            <aura:if isTrue="{!equals(v.measure.Measure__r.Track_Progress_By__c, 'Numbers Completed')}">
                                 <aura:set attribute="else">
-                                    <aura:if isTrue="{!equals(v.measure.myV2MOM__Measure__r.myV2MOM__Track_Progress_By__c, 'Completion Status')}">
+                                    <aura:if isTrue="{!equals(v.measure.Measure__r.Track_Progress_By__c, 'Completion Status')}">
                                         <div class="slds-form-element slds-size_1-of-2">
-                                            <lightning:select name="MeasureStatus" label="Status" value="{!v.measure.myV2MOM__Status__c}">
+                                            <lightning:select name="MeasureStatus" label="Status" value="{!v.measure.Status__c}">
                                                 <option value="On Track">On Track</option>
                                                 <option value="Not Started">Not Started</option>
                                                 <option value="Behind Schedule">Behind Schedule</option>
@@ -40,12 +40,12 @@
                                     <div class="slds-form-element">
                                         <label class="slds-form-element__label">Target Value</label>
                                         <div class="slds-form-element__control lineheight1875">
-                                            <lightning:formattedNumber value="{!v.measure.myV2MOM__Target_Value__c}"/>
+                                            <lightning:formattedNumber value="{!v.measure.Target_Value__c}"/>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="slds-form-element slds-size_1-of-2">
-                                    <lightning:input name="input2" type="number" value="{!v.measure.myV2MOM__Current_Value__c}" label="Current Value"/>
+                                    <lightning:input name="input2" type="number" value="{!v.measure.Current_Value__c}" label="Current Value"/>
                                 </div>
                             </aura:if>
                         </div>

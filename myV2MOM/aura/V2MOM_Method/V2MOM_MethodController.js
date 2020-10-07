@@ -4,7 +4,7 @@
 	},
     closeModal : function(component, event, helper) {
         helper.modalHelper(component, 'srModal', 'modalBkdrp', false);
-        component.set("v.method",{'sobjectType':'myV2MOM__Method__c'});
+        component.set("v.method",{'sobjectType':'Method__c'});
         component.set("v.v2momId", '');
     },
     showMethodModal : function(component, event, helper){
@@ -12,7 +12,7 @@
         if(params.method != 'undefined' && params.method != null){
             component.set("v.method",params.method);
         }else{
-            component.set("v.method",{'sobjectType':'myV2MOM__Method__c'});
+            component.set("v.method",{'sobjectType':'Method__c'});
         }
         component.set("v.v2momId",params.v2momId);
         component.set("v.isReadOnly",params.isReadOnly);
@@ -30,7 +30,7 @@
             if (state === 'SUCCESS'){
                 var successMessage = 'Method \''+component.get("v.method.Name")+ '\' saved successfully.';
                 helper.toastMessage('Success!', successMessage, 'success');
-                component.set("v.method",{'sobjectType':'myV2MOM__Method__c'});
+                component.set("v.method",{'sobjectType':'Method__c'});
                 component.set("v.v2momId", '');
             } else if (state === 'INCOMPLETE'){
                 console.log("No response from server or client is offline.");

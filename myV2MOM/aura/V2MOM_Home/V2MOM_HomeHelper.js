@@ -15,8 +15,8 @@
                 component.set("v.uName", rVal.userName);
                 component.set("v.currentUserId", rVal.userId);
                 component.set("v.myV2mom", vMom);                
-                component.set("v.vision", vMom.myV2MOM__Vision__c); 
-                component.set("v.value", vMom.myV2MOM__Values__c);
+                component.set("v.vision", vMom.Vision__c); 
+                component.set("v.value", vMom.Values__c);
                 component.set("v.v2momId", vMom.Id);
                 component.set("v.v2momUserId", vMom.CreatedById);
                 component.set("v.allMethods", rVal.allMethods);
@@ -29,7 +29,7 @@
                 for(var i=0; i< v2momOpts.length; i++){
                     var optObj = {};
                     optObj.value = v2momOpts[i].Id;
-                    optObj.label = 'FY'+v2momOpts[i].myV2MOM__FY_Year__c;
+                    optObj.label = 'FY'+v2momOpts[i].FY_Year__c;
                     opts.push(optObj);
                 }
                 component.set("v.v2momOptionsArr", opts);

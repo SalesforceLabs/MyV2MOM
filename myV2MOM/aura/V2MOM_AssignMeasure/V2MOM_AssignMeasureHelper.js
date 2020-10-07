@@ -43,10 +43,10 @@
                         measureTarObj.userId = userListAttr[j].Id;
                         measureTarObj.userName = userListAttr[j].Name;
                         if(existingMeasureList[i] != undefined){
-                            measureTarObj.percentTar = existingMeasureList[i].myV2MOM__Percentage__c;
+                            measureTarObj.percentTar = existingMeasureList[i].Percentage__c;
                             measureTarObj.actualTar = currentMeasureTargetAttr * (measureTarObj.percentTar/100);
-                            measureTarObj.currVal = existingMeasureList[i].myV2MOM__Current_Value__c;
-                            measureTarObj.Status = existingMeasureList[i].myV2MOM__Status__c;
+                            measureTarObj.currVal = existingMeasureList[i].Current_Value__c;
+                            measureTarObj.Status = existingMeasureList[i].Status__c;
                         }else if(measureTarList[i] != undefined && measureTarList[i].userId == userListAttr[j].Id){
                             measureTarObj.percentTar = measureTarList[i].percentTar;
                             measureTarObj.actualTar = currentMeasureTargetAttr * (measureTarObj.percentTar/100);
